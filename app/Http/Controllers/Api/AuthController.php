@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -13,63 +16,67 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 use App\Http\Controllers\Controller;
-use App\Traits\ErrorMessage;
+use App\Utilities\Response;
 use App\Models\User;
+use App\Models\Profile;
 
 class AuthController extends Controller
 {
-    use ErrorMessage;
+    use Response;
 
     public function login(Request $request)
     {
     	$returnValue = [];
 
     	$validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
         if ($validator->fails()) {
         	$returnValue = [
-        		'error' => true,
+        		'success' => false,
         		'message' => $validator->errors()
         	];
 
             return response()->json($returnValue, 400);
         }
 
-    	$credentials = $request->only('email', 'password');
+    	$credentials = $request->only('username', 'password');
 
     	try {
-    		$token = JWTAuth::attempt($credentials);
+            $user = User::where('username', $credentials['username'])->first();
+
+            if (!$user) {
+                return $this->unauthorized();
+            }
+
+            $role = null;
+            $roles = $user->getRoleNames();
+
+            foreach ($roles as $key => $value) {
+                $role = $value;
+            }
+
+            $customClaims = array(
+                'name' => $user->name,
+                'role' => $role
+            );
+
+            $token = JWTAuth::claims($customClaims)->attempt($credentials);
 
 	        if (!$token) {
-	        	$code = 401;
-	        	$returnValue = [
-	        		'error' => true,
-	        		'message' => 'Invalid credentials'
-	        	];
+                return $this->unauthorized();
 	        } else {
-                // $data = User::where('email', $credentials['email'])->first();
-
-                // $customClaims = array(
-                //     'user_id' => $data->id
-                // );
-
-                // $token = JWTAuth::claims($customClaims)->attempt($credentials);
-
 		        $code = 200;
 	        	$returnValue = [
-		        	'error' => false, 
-		        	'data' => $token
+		        	'success' => true, 
+		        	'token' => $token,
+                    'url' => $this->endpoint()
 		        ];
 	        }
     	} catch (JWTException $ex) {
-	        $code = 500;
-    		$returnValue = [
-	        	'error' => true, 
-	        	'message' => $this->errMessage($ex)
-	        ];
+	        return $this->error($ex);
     	}
 
         return response()->json($returnValue, $code);
@@ -80,38 +87,76 @@ class AuthController extends Controller
     	$returnValue = [];
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
+            'name' => 'required|string',
+            'username' => 'required|unique:users',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed',
+            'phone' => 'required|string',
+            'sid' => 'required|string|size:16',
         ]);
 
         if($validator->fails()){
         	$returnValue = [
-        		'error' => true,
+        		'success' => false,
         		'message' => $validator->errors()
         	];
 
             return response()->json($returnValue, 400);
         }
 
+        DB::beginTransaction();
+
         try {
 	        $user = User::create([
 	        	'name' => $request->name,
+                'username' => $request->username,
 	        	'email' => $request->email,
 	        	'password' => Hash::make($request->password)
 	        ]);
 
+            $user->assignRole('user');
+
+            $profile = Profile::create([
+                'user_id' => $user->id,
+                'sid' => $request->sid,
+                'email' => $user->email,
+                'full_name' => $user->name,
+                'birth_place' => $request->birth_place,
+                'birth_date' => $request->birth_date,
+                'sex' => $request->sex,
+                'religion' => $request->religion,
+                'martial_status' => $request->martial_status,
+                'phone' => $request->phone,
+                'identity_card_photo' => $request->identity_card_photo,
+                'photo' => $request->photo
+            ]);
+
+            $data = [
+                'sid' => $request->sid,
+                'email' => $user->email,
+                'full_name' => $user->name,
+                'birth_place' => $request->birth_place,
+                'birth_date' => $request->birth_date,
+                'sex' => $request->sex,
+                'religion' => $request->religion,
+                'martial_status' => $request->martial_status,
+                'phone' => $request->phone,
+            ];
+
 	        $code = 201;
 	        $returnValue = [
-	        	'error' => false, 
-	        	'data' => $user
+	        	'success' => true, 
+	        	'data' => $data,
+                'url' => $this->endpoint()
 	        ];
+
+            DB::commit();
         } catch (Exception $ex) {
-	        $code = 500; 
-    		$returnValue = [
-	        	'error' => true, 
-	        	'message' => $this->errMessage($ex)
-	        ];       	
+            DB::rollback();
+	        return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
         }
 
         return response()->json($returnValue, $code);
@@ -130,15 +175,11 @@ class AuthController extends Controller
 
             $code = 200;
             $returnValue = array(
-                'error' => false,
+                'success' => true,
                 'data' => $refreshed
             );
         } catch (JWTException $ex) {
-            $code = 500; 
-    		$returnValue = [
-	        	'error' => true, 
-	        	'message' => $this->errMessage($ex)
-	        ]; 
+            return $this->error($ex);
         }
 
         return response()->json($returnValue, $code);
@@ -158,11 +199,7 @@ class AuthController extends Controller
                 'message' => 'You have logged out'
             ];
         } catch (JWTException $ex) {
-        	$code = 500;
-            $returnValue = [
-	        	'error' => true, 
-	        	'message' => $this->errMessage($ex)
-	        ]; 
+            return $this->error($ex);
         }
 
         return response()->json($returnValue, $code);

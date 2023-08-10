@@ -16,18 +16,18 @@ class CreateProfilesTable extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->primary();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('sid', 16)->unique()->nullable(false);
-            $table->string('email')->unique()->nullable(false);
-            $table->string('full_name')->nullable(false);
-            $table->string('birth_place');
-            $table->string('birth_date');
-            $table->string('sex');
-            $table->unsignedBigInteger('religion');
+            $table->string('sid', 16)->unique();
+            $table->string('email')->unique();
+            $table->string('full_name');
+            $table->string('birth_place')->nullable();
+            $table->string('birth_date')->nullable();
+            $table->string('sex')->nullable();
+            $table->unsignedBigInteger('religion')->nullable();
             $table->foreign('religion')->references('id')->on('ref_religions')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('martial_status');
-            $table->string('phone')->nullable(false);
-            $table->string('identity_card_photo');
-            $table->string('photo');
+            $table->string('martial_status')->nullable();
+            $table->string('phone');
+            $table->string('identity_card_photo')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

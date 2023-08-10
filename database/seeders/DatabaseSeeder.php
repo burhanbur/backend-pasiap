@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesTableSeeder::class,
             UsersTableSeeder::class,
+            CategoriesTableSeeder::class,
+            RefReligionsTableSeeder::class,
+            RefReportStatusTableSeeder::class,
             UserRolesTableSeeder::class,
             SettingsTableSeeder::class,
         ]);
