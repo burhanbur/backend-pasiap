@@ -19,31 +19,31 @@ class RolesTableSeeder extends Seeder
     {
          Role::create([
             'name' => 'admin', 
-            'alias' => 'Admin'
+            'alias' => 'Admin',
             'guard_name' => 'api'
          ]);
 
          Role::create([
             'name' => 'user', 
-            'alias' => 'User'
+            'alias' => 'User',
             'guard_name' => 'api'
          ]);
 
          Role::create([
             'name' => 'satpol_pp', 
-            'alias' => 'Satpol PP'
+            'alias' => 'Satpol PP',
             'guard_name' => 'api'
          ]);
 
          Role::create([
             'name' => 'linmas', 
-            'alias' => 'Linmas'
+            'alias' => 'Linmas',
             'guard_name' => 'api'
          ]);
 
          Role::create([
             'name' => 'petugas', 
-            'alias' => 'Petugas'
+            'alias' => 'Petugas',
             'guard_name' => 'api'
          ]);
     }

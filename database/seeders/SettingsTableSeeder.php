@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 use App\Models\Setting;
 
-class UsersTableSeeder extends Seeder
+class SettingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +16,9 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+        Setting::create([
+            'key' => Str::uuid(),
+            'value' => ''
+        ]);
     }
 }
