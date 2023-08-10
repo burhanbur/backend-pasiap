@@ -23,6 +23,19 @@ Run composer install or update
 ```bash
 composer install
 ```
+
+Generate your APP_KEY to your `.env`
+
+```bash
+php artisan key:generate
+```
+
+Generate your JWT_SECRET to your `.env`
+
+```bash
+php artisan jwt:secret
+```
+
 Create database according to what you want (ex: db_pasiap)
 
 Run migration database
