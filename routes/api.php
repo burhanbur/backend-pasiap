@@ -26,7 +26,7 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 
 Route::group([ 
     'middleware' => [
-        // 'auth.jwt',
+        'auth.jwt',
         'verified'
     ]
 ], function () {

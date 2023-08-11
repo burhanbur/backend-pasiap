@@ -270,6 +270,6 @@ class AuthController extends Controller
             $user->save();
         }
 
-        return redirect()->route('verified');
+        return redirect()->route('verified', ['name' => $user->name]);
     }
 }
