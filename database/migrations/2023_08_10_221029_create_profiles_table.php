@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->string('sex')->nullable();
             $table->unsignedBigInteger('religion')->nullable();
             $table->foreign('religion')->references('id')->on('ref_religions')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('martial_status')->nullable();
+            $table->string('marital_status')->nullable();
             $table->string('phone');
             $table->string('identity_card_photo')->nullable();
             $table->string('photo')->nullable();

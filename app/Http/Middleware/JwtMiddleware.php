@@ -10,8 +10,12 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+use App\Utilities\Response;
+
 class JwtMiddleware
 {
+    use Response;
+
     /**
      * Handle an incoming request.
      *
@@ -27,7 +31,8 @@ class JwtMiddleware
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Token is invalid'
+                    'message' => 'Token is invalid',
+                    'url' => $this->endpoint()
                 ], 401);
             } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
                 try {
@@ -37,18 +42,21 @@ class JwtMiddleware
                 } catch (\Tymon\JWTAuth\Exceptions\TokenBlacklistedException $e) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Token has been blacklisted'
+                        'message' => 'Token has been blacklisted',
+                        'url' => $this->endpoint()
                     ], 500);
                 } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Token is expired'
+                        'message' => 'Token is expired',
+                        'url' => $this->endpoint()
                     ], 401);
                 }
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Token is not found'
+                    'message' => 'Token is not found',
+                    'url' => $this->endpoint()
                 ], 401);
             }
         }

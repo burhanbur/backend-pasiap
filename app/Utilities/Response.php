@@ -34,6 +34,18 @@ trait Response
 		return response()->json($returnValue, $code);
 	}
 
+	public function notVerified()
+	{
+    	$code = 401;
+    	$returnValue = [
+    		'success' => false,
+    		'message' => 'Please verify your email first',
+            'url' => $this->endpoint()
+    	];
+
+		return response()->json($returnValue, $code);
+	}
+
 	public function error($ex = null)
 	{
     	$code = 500;

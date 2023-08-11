@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes(['verify' => true]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('verify/{id}', [App\Http\Controllers\Api\AuthController::class, 'verify'])->name('pendaftaran.verify');
+Route::get('verified', [App\Http\Controllers\HomeController::class, 'verified'])->name('verified');

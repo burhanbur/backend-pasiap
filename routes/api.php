@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,10 +24,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
-Route::group(['namespace' => 'Api'], function () {
-    Route::group(['middleware' => 'auth.jwt'], function () {
+Route::group([ 
+    'middleware' => [
+        // 'auth.jwt',
+        'verified'
+    ]
+], function () {
+    // categories
+    Route::get('categories', [CategoryController::class, 'getAllCategories']);
 
-        Route::post('refresh', [AuthController::class, 'refreshToken']);
-        Route::post('logout', [AuthController::class, 'logout']);
-    });
+    Route::post('refresh', [AuthController::class, 'refreshToken']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });

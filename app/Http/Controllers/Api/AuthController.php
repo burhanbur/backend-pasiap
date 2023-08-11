@@ -2,12 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+
+use App\Mails\VerifyMail;
+
+use App\Models\User;
+use App\Models\Profile;
+
+use App\Utilities\Response;
+
 use Illuminate\Http\Request;
+ 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Database\QueryException;
 
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -15,10 +28,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-use App\Http\Controllers\Controller;
-use App\Utilities\Response;
-use App\Models\User;
-use App\Models\Profile;
+use Exception;
+use ErrorException;
 
 class AuthController extends Controller
 {
@@ -86,6 +97,8 @@ class AuthController extends Controller
     {
     	$returnValue = [];
 
+        $path = 'assets/';
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'username' => 'required|unique:users',
@@ -93,6 +106,8 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed',
             'phone' => 'required|string',
             'sid' => 'required|string|size:16',
+            'identity_card_photo' => 'file|mimes:jpeg,png|max:2048',
+            'photo' => 'file|mimes:jpeg,png|max:2048',
         ]);
 
         if($validator->fails()){
@@ -116,20 +131,33 @@ class AuthController extends Controller
 
             $user->assignRole('user');
 
-            $profile = Profile::create([
-                'user_id' => $user->id,
-                'sid' => $request->sid,
-                'email' => $user->email,
-                'full_name' => $user->name,
-                'birth_place' => $request->birth_place,
-                'birth_date' => $request->birth_date,
-                'sex' => $request->sex,
-                'religion' => $request->religion,
-                'martial_status' => $request->martial_status,
-                'phone' => $request->phone,
-                'identity_card_photo' => $request->identity_card_photo,
-                'photo' => $request->photo
-            ]);
+            $profile = new Profile;
+            $profile->user_id = $user->id;
+            $profile->sid = $request->sid;
+            $profile->email = $user->email;
+            $profile->full_name = $user->name;
+            $profile->birth_place = $request->birth_place;
+            $profile->birth_date = date('Y-m-d', strtotime($request->birth_date));
+            $profile->sex = $request->sex;
+            $profile->religion = $request->religion;
+            $profile->marital_status = $request->marital_status;
+            $profile->phone = $request->phone;
+
+            if ($request->file('identity_card_photo')) {
+                $image = $request->file('identity_card_photo');
+                $file_image = str_replace(' ', '_', $user->id . '_' . $image->getClientOriginalName());
+                $image->move($path . 'identity_card_photo', $file_image);
+                $profile->identity_card_photo = $file_image;
+            }
+
+            if ($request->file('photo')) {
+                $photo = $request->file('photo');
+                $file_photo = str_replace(' ', '_', $user->id . '_' . $photo->getClientOriginalName());
+                $photo->move($path . 'photo', $file_photo);
+                $profile->photo = $file_photo;
+            }
+
+            $profile->save();
 
             $data = [
                 'sid' => $request->sid,
@@ -139,22 +167,37 @@ class AuthController extends Controller
                 'birth_date' => $request->birth_date,
                 'sex' => $request->sex,
                 'religion' => $request->religion,
-                'martial_status' => $request->martial_status,
+                'marital_status' => $request->marital_status,
                 'phone' => $request->phone,
+                'identity_card_photo' => $path . 'identity_card_photo/' . $profile->identity_card_photo,
+                'photo' => $path . 'photo/' . $profile->photo,
             ];
 
-	        $code = 201;
-	        $returnValue = [
-	        	'success' => true, 
-	        	'data' => $data,
-                'url' => $this->endpoint()
-	        ];
+            $dataEmail = [
+                'user_id' => $user->id,
+                'url' => route('pendaftaran.verify', encrypt($user->id)),
+                'name' => $request->name,
+            ];
+
+            // send mail verifikasi user
+            $mail = new VerifyMail($dataEmail);
+            Mail::to($request->email)->send($mail);
 
             DB::commit();
+
+            $code = 201;
+            $returnValue = [
+                'success' => true, 
+                'data' => $data,
+                'url' => $this->endpoint()
+            ];
         } catch (Exception $ex) {
             DB::rollback();
 	        return $this->error($ex);
         } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
             DB::rollback();
             return $this->error($ex);
         }
@@ -203,5 +246,30 @@ class AuthController extends Controller
         }
 
         return response()->json($returnValue, $code);
+    }
+
+    public function verify($id)
+    {
+        $userId = decrypt($id);
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            $code = 404;
+            $returnValue = [
+                'success' => false,
+                'message' => 'User not found',
+                'url' => $this->endpoint()
+            ];
+
+            return response()->json($returnValue, $code);
+        }
+
+        if (!$user->email_verified_at) {
+            $user->email_verified_at = date('Y-m-d H:i:s');
+            $user->save();
+        }
+
+        return redirect()->route('verified');
     }
 }
