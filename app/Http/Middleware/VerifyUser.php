@@ -17,7 +17,11 @@ class VerifyUser
     {
         $user = auth()->user();
 
-        if ($user && !$user->email_verified_at) {
+        if (!$user) {
+            return $this->unauthorized();
+        }
+
+        if (!$user->email_verified_at) {
             return $this->notVerified();
         }
 

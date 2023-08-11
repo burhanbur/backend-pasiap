@@ -27,6 +27,11 @@ class Report extends Model
         return $this->belongsTo(User::class, 'reported_by');
     }
 
+    public function getTakenBy()
+    {
+        return $this->belongsTo(User::class, 'taken_by');
+    }
+
     public function getStatus()
     {
         return $this->belongsTo(RefReportStatus::class, 'status');

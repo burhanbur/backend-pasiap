@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 use Illuminate\Database\QueryException;
 
@@ -47,7 +48,8 @@ class AuthController extends Controller
         if ($validator->fails()) {
         	$returnValue = [
         		'success' => false,
-        		'message' => $validator->errors()
+        		'message' => $validator->errors(),
+                'url' => $this->endpoint()
         	];
 
             return response()->json($returnValue, 400);
@@ -88,7 +90,11 @@ class AuthController extends Controller
 	        }
     	} catch (JWTException $ex) {
 	        return $this->error($ex);
-    	}
+    	} catch (QueryException $ex) {
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            return $this->error($ex);
+        }
 
         return response()->json($returnValue, $code);
     }
@@ -113,7 +119,8 @@ class AuthController extends Controller
         if($validator->fails()){
         	$returnValue = [
         		'success' => false,
-        		'message' => $validator->errors()
+        		'message' => $validator->errors(),
+                'url' => $this->endpoint()
         	];
 
             return response()->json($returnValue, 400);
@@ -169,8 +176,8 @@ class AuthController extends Controller
                 'religion' => $request->religion,
                 'marital_status' => $request->marital_status,
                 'phone' => $request->phone,
-                'identity_card_photo' => $path . 'identity_card_photo/' . $profile->identity_card_photo,
-                'photo' => $path . 'photo/' . $profile->photo,
+                'identity_card_photo' => ($profile->identity_card_photo) ? URL::to('/') . '/' . $path . 'identity_card_photo/' . $profile->identity_card_photo : '',
+                'photo' => ($profile->photo) ? URL::to('/') . '/' . $path . 'photo/' . $profile->photo : '',
             ];
 
             $dataEmail = [
@@ -219,9 +226,63 @@ class AuthController extends Controller
             $code = 200;
             $returnValue = array(
                 'success' => true,
-                'data' => $refreshed
+                'token' => $refreshed,                
+                'url' => $this->endpoint()
             );
         } catch (JWTException $ex) {
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+
+        return response()->json($returnValue, $code);
+    }
+
+    public function changePassword(Request $request, $id)
+    {
+        $returnValue = [];
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|confirmed',
+        ]);
+
+        if($validator->fails()){
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
+                'url' => $this->endpoint()
+            ];
+
+            return response()->json($returnValue, 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $user = User::find($id);
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            DB::commit();
+
+            $code = 201;
+            $returnValue = [
+                'success' => true, 
+                'data' => $data,
+                'url' => $this->endpoint()
+            ];
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            DB::rollback();
             return $this->error($ex);
         }
 
@@ -239,9 +300,14 @@ class AuthController extends Controller
             $code = 200;
             $returnValue = [
                 'success' => true,
-                'message' => 'You have logged out'
+                'message' => 'You have logged out',
+                'url' => $this->endpoint()
             ];
         } catch (JWTException $ex) {
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
             return $this->error($ex);
         }
 

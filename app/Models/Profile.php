@@ -10,6 +10,7 @@ class Profile extends Model
     use HasFactory;
 
     protected $table = 'profiles';
+    protected $primaryKey = 'user_id';
     protected $guarded = [];
 
     public function getUser()

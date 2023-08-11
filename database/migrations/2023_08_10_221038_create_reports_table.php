@@ -19,6 +19,8 @@ class CreateReportsTable extends Migration
             $table->foreign('cat_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('reported_by');
             $table->foreign('reported_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('taken_by')->nullable();
+            $table->foreign('taken_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('location')->nullable();
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
