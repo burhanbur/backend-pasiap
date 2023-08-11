@@ -1,5 +1,7 @@
 /node_modules
 /public/hot
+/public/assets/identity_card_photo
+/public/assets/photo
 /public/storage
 /storage/*.key
 /vendor
