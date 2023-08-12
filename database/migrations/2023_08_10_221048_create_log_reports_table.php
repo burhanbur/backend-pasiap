@@ -17,7 +17,7 @@ class CreateLogReportsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('report_id');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('taken_by');
+            $table->unsignedBigInteger('taken_by')->nullable();
             $table->foreign('taken_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('status');
             $table->foreign('status')->references('id')->on('ref_report_status')->onDelete('cascade')->onUpdate('cascade');

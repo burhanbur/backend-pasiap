@@ -52,9 +52,10 @@ Route::group([
     Route::get('reports', [ReportController::class, 'getReports']);
     Route::get('reports/{id}', [ReportController::class, 'getReportById']);
     Route::get('reports/status/{id}', [ReportController::class, 'getReportByStatus']);
-    Route::get('reports/handlers/{id}', [ReportController::class, 'getReportByHandler']);
+    Route::get('reports/handler/{id}', [ReportController::class, 'getReportByHandler']);
     Route::get('reports/request/{id}', [ReportController::class, 'getReportByRequest']);
     Route::post('reports', [ReportController::class, 'createReport']);
+    Route::post('reports/{id}', [ReportController::class, 'updateReport']);
 
     // update status
     Route::post('reports/status/{id}', [ReportController::class, 'updateReportStatus']);

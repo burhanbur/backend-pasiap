@@ -46,6 +46,18 @@ trait Response
 		return response()->json($returnValue, $code);
 	}
 
+	public function notFound()
+	{
+    	$code = 404;
+    	$returnValue = [
+    		'success' => false,
+    		'message' => 'Data not found',
+            'url' => $this->endpoint()
+    	];
+
+		return response()->json($returnValue, $code);
+	}
+
 	public function error($ex = null)
 	{
     	$code = 500;
