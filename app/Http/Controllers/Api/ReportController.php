@@ -357,7 +357,7 @@ class ReportController extends Controller
 				return response()->json([
 					'success' => false,
 					'message' => 'Can not update report because report already proceed by officer',
-					'url' => $this->endpoint
+					'url' => $this->endpoint()
 				], $code);
 			}
 
