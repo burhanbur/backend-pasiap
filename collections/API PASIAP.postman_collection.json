@@ -1,0 +1,641 @@
+{
+	"info": {
+		"_postman_id": "5c4c9ee2-ec75-4144-a693-a1f3dfa0a90a",
+		"name": "API PASIAP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18971099"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"bwicaksono\",\r\n    \"password\": \"burhan123\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Bayu Wicaksono",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "bwicaksono",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "bayuasik@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "burhan123",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "burhan123",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "085695682973",
+									"type": "text"
+								},
+								{
+									"key": "sid",
+									"value": "1543859348548548",
+									"type": "text"
+								},
+								{
+									"key": "birth_place",
+									"value": "Ciledug",
+									"type": "text"
+								},
+								{
+									"key": "birth_date",
+									"value": "1996-08-08",
+									"type": "text"
+								},
+								{
+									"key": "sex",
+									"value": "Pria",
+									"type": "text"
+								},
+								{
+									"key": "religion",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "marital_status",
+									"value": "Lajang",
+									"type": "text"
+								},
+								{
+									"key": "identity_card_photo",
+									"type": "file",
+									"src": "/C:/Users/Giga/Pictures/aliexpress 2.png"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/Giga/Pictures/chemfyi.PNG"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "get all categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dropdown",
+			"item": [
+				{
+					"name": "get all religions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dropdown/religions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dropdown",
+								"religions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all report status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dropdown/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dropdown",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all sexs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dropdown/sexs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dropdown",
+								"sexs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all marital status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dropdown/marital_status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dropdown",
+								"marital_status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "get profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/profiles/13",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"profiles",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "sid",
+									"value": "0987654321654321",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Bayu Wicaksono 2",
+									"type": "text"
+								},
+								{
+									"key": "birth_place",
+									"value": "Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "birth_date",
+									"value": "1996-08-08",
+									"type": "text"
+								},
+								{
+									"key": "sex",
+									"value": "Laki-laki",
+									"type": "text"
+								},
+								{
+									"key": "religion",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "marital_status",
+									"value": "Lajang",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "086595682973",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/profiles/13",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"profiles",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "get all reports",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get report by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all report by  status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/status/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"status",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all report by handler",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/handler/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"handler",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all report by request",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/request/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"request",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cat_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "reported_by",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "lat",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "long",
+									"value": "54321",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Kebakaran bang",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/Giga/Pictures/aurora.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/reports",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "awikwok",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/Giga/Pictures/222222.png"
+								},
+								{
+									"key": "cat_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/reports/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update report status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "taken_by",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/reports/status/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reports",
+								"status",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
