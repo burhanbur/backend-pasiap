@@ -36,6 +36,26 @@ class AuthController extends Controller
 {
     use Response;
 
+    /**
+     * @OA\Post(
+     *    path="/pasiap/public/api/login",
+     *    operationId="index",
+     *    tags={"Authentication"},
+     *    @OA\Parameter(name="username", in="query", description="username", required=true,
+     *        @OA\Schema(type="string")
+     *    ),
+     *    @OA\Parameter(name="password", in="query", description="password", required=true,
+     *        @OA\Schema(type="string")
+     *    ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
     public function login(Request $request)
     {
     	$returnValue = [];

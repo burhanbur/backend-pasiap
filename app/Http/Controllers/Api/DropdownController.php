@@ -30,6 +30,7 @@ class DropdownController extends Controller
 
     public function getAllReligions(Request $request)
     {
+        $returnValue = [];
         $code = 400;
 
         try {
@@ -50,6 +51,7 @@ class DropdownController extends Controller
 
     public function getAllStatus(Request $request)
     {
+        $returnValue = [];
         $code = 400;
 
         try {

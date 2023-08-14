@@ -165,7 +165,7 @@
 			]
 		},
 		{
-			"name": "Dropdown",
+			"name": "Dropdowns",
 			"item": [
 				{
 					"name": "get all religions",
@@ -630,6 +630,34 @@
 								"reports",
 								"status",
 								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Faqs",
+			"item": [
+				{
+					"name": "get all faq",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/faq",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"faq"
 							]
 						}
 					},

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DropdownController;
+use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\UserController;
 
@@ -35,6 +36,9 @@ Route::group([
 ], function () {
     // categories
     Route::get('categories', [CategoryController::class, 'getAllCategories']);
+
+    // faq
+    Route::get('faq', [FaqController::class, 'getAllFaq']);
 
     // dropdown
     Route::group(['prefix' => 'dropdown'], function () {
