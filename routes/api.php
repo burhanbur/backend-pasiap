@@ -28,9 +28,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
+// dropdown
+Route::group(['prefix' => 'dropdown'], function () {
+    Route::get('religions', [DropdownController::class, 'getAllReligions']);
+    Route::get('status', [DropdownController::class, 'getAllStatus']);
+    Route::get('sexs', [DropdownController::class, 'getAllSexs']);
+    Route::get('marital_status', [DropdownController::class, 'getAllMaritalStatus']);
+});
+
 Route::group([ 
     'middleware' => [
-        // 'auth.jwt',
+        'auth.jwt',
         'verified'
     ]
 ], function () {
@@ -39,14 +47,6 @@ Route::group([
 
     // faq
     Route::get('faq', [FaqController::class, 'getAllFaq']);
-
-    // dropdown
-    Route::group(['prefix' => 'dropdown'], function () {
-        Route::get('religions', [DropdownController::class, 'getAllReligions']);
-        Route::get('status', [DropdownController::class, 'getAllStatus']);
-        Route::get('sexs', [DropdownController::class, 'getAllSexs']);
-        Route::get('marital_status', [DropdownController::class, 'getAllMaritalStatus']);
-    });
 
     // profiles
     Route::get('profiles/{id}', [UserController::class, 'getProfile']);
