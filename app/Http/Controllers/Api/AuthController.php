@@ -38,22 +38,25 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *    path="/pasiap/public/api/login",
-     *    operationId="index",
-     *    tags={"Authentication"},
-     *    @OA\Parameter(name="username", in="query", description="username", required=true,
+     *    path="/login",
+     *    operationId="login",
+     *    tags={"Authentications"},
+     *    description="Return token to login into the apps",
+     *    @OA\Parameter(name="username", in="query", required=true,
      *        @OA\Schema(type="string")
      *    ),
-     *    @OA\Parameter(name="password", in="query", description="password", required=true,
+     *    @OA\Parameter(name="password", in="query", required=true,
      *        @OA\Schema(type="string")
      *    ),
-     *     @OA\Response(
-     *          response=200, description="Success",
-     *          @OA\JsonContent(
-     *             @OA\Property(property="status", type="integer", example="200"),
-     *             @OA\Property(property="data",type="object")
-     *          )
-     *       )
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *        @OA\JsonContent(
+     *           @OA\Property(property="success", type="boolean", example="true"),
+     *           @OA\Property(property="token",type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL3Bhc2lhcFwvcHVibGljXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjkyNDY3NTY3LCJleHAiOjE2OTI0NzExNjcsIm5iZiI6MTY5MjQ2NzU2NywianRpIjoiNkU1ZUZybklDVjlqckFXdSIsInN1YiI6MiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsIm5hbWUiOiJUd2luIEVkbyBOdWdyYWhhIiwicm9sZSI6InVzZXIifQ.zyhJ7FN_Z2L41LrgMXL4LhWpPj_gUvQMt68UH3c2DGw"),
+     *           @OA\Property(property="url",type="string", example="http://localhost/pasiap/public/api/login")
+     *        )
+     *    )
      *  )
      */
     public function login(Request $request)
@@ -119,6 +122,40 @@ class AuthController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Post(
+     *    path="/register",
+     *    operationId="register",
+     *    tags={"Authentications"},
+     *    description="Register account",
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *                @OA\Property(property="name", type="string"),
+     *                @OA\Property(property="username", type="string"),
+     *                @OA\Property(property="email", type="string"),
+     *                @OA\Property(property="password", type="string"),
+     *                @OA\Property(property="password_confirmation", type="string"),
+     *                @OA\Property(property="phone", type="string"),
+     *                @OA\Property(property="sid", type="string"),
+     *                @OA\Property(property="birth_place", type="string"),
+     *                @OA\Property(property="birth_date", type="string"),
+     *                @OA\Property(property="sex", type="string"),
+     *                @OA\Property(property="religion", type="string"),
+     *                @OA\Property(property="marital_status", type="string"),
+     *                @OA\Property(property="identity_card_photo", type="file"),
+     *                @OA\Property(property="photo", type="file"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function register(Request $request)
     {
     	$returnValue = [];

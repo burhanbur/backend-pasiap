@@ -2,20 +2,30 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Application Programming Interface (API) for Pasiap Apps",
+        "description": "L5 Swagger OpenAPI documentation for Pasiap Apps",
+        "contact": {
+            "email": "burhanburdev@gmail.com"
+        },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://localhost/pasiap/public/api",
+            "description": "Demo API Server"
+        }
+    ],
     "paths": {
-        "/pasiap/public/api/login": {
+        "/login": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Authentications"
                 ],
-                "operationId": "index",
+                "description": "Return token to login into the apps",
+                "operationId": "login",
                 "parameters": [
                     {
                         "name": "username",
                         "in": "query",
-                        "description": "username",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -24,7 +34,6 @@
                     {
                         "name": "password",
                         "in": "query",
-                        "description": "password",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -38,18 +47,91 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": "200"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
                                         },
-                                        "data": {
-                                            "type": "object"
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL3Bhc2lhcFwvcHVibGljXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjkyNDY3NTY3LCJleHAiOjE2OTI0NzExNjcsIm5iZiI6MTY5MjQ2NzU2NywianRpIjoiNkU1ZUZybklDVjlqckFXdSIsInN1YiI6MiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsIm5hbWUiOiJUd2luIEVkbyBOdWdyYWhhIiwicm9sZSI6InVzZXIifQ.zyhJ7FN_Z2L41LrgMXL4LhWpPj_gUvQMt68UH3c2DGw"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "http://localhost/pasiap/public/api/login"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentications"
+                ],
+                "description": "Register account",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "sid": {
+                                        "type": "string"
+                                    },
+                                    "birth_place": {
+                                        "type": "string"
+                                    },
+                                    "birth_date": {
+                                        "type": "string"
+                                    },
+                                    "sex": {
+                                        "type": "string"
+                                    },
+                                    "religion": {
+                                        "type": "string"
+                                    },
+                                    "marital_status": {
+                                        "type": "string"
+                                    },
+                                    "identity_card_photo": {
+                                        "type": "file"
+                                    },
+                                    "photo": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
                     }
                 }
             }
