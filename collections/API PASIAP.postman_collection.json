@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"bwicaksono\",\r\n    \"password\": \"burhan123\"\r\n}"
+							"raw": "{\r\n    \"username\": \"tnugraha\",\r\n    \"password\": \"user123\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/login",
@@ -280,13 +280,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/profiles/13",
+							"raw": "{{base_url}}/profiles/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"profiles",
-								"13"
+								"2"
 							]
 						}
 					},
@@ -401,13 +401,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/reports/2",
+							"raw": "{{base_url}}/reports/1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"reports",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -509,7 +509,7 @@
 								},
 								{
 									"key": "reported_by",
-									"value": "3",
+									"value": "2",
 									"type": "text"
 								},
 								{
@@ -530,12 +530,13 @@
 								{
 									"key": "status",
 									"value": "1",
+									"description": "PROSES",
 									"type": "text"
 								},
 								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/Giga/Pictures/aurora.jpg"
+									"src": "/C:/Users/Giga/Pictures/222222.png"
 								}
 							]
 						},
@@ -658,6 +659,44 @@
 							],
 							"path": [
 								"faq"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Firebase",
+			"item": [
+				{
+					"name": "fcm token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "token12345678910",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/tokens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens"
 							]
 						}
 					},
