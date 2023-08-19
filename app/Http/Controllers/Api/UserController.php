@@ -19,8 +19,11 @@ use App\Http\Controllers\Controller;
 
 use App\Utilities\Response;
 
-use App\Models\User;
+use App\Models\FcmToken;
 use App\Models\Profile;
+use App\Models\User;
+
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 use Exception;
 use ErrorException;
@@ -86,7 +89,8 @@ class UserController extends Controller
         if($validator->fails()){
             $returnValue = [
                 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'url' => $this->endpoint()
             ];
 
             return response()->json($returnValue, 400);
@@ -158,6 +162,59 @@ class UserController extends Controller
             return $this->error($ex);
         }
 
+        return response()->json($returnValue, $code);
+    }
+
+    public function storeTokenFcm(Request $request)
+    {
+        $code = 400;
+        $returnValue = [];
+
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
+                'url' => $this->endpoint()
+            ];
+
+            return response()->json($returnValue, $code);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $token = JWTAuth::getToken();
+            $payload = JWTAuth::getPayload($token)->toArray();
+
+            $data = FcmToken::create([
+                'user_id' => $payload['sub'],
+                'token' => $request->token
+            ]);
+
+            DB::commit();
+
+            $code = 200;
+            $returnValue = [
+                'success' => true, 
+                'data' => $data,
+                'url' => $this->endpoint()
+            ];
+
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+        
         return response()->json($returnValue, $code);
     }
 }

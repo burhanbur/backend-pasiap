@@ -25,7 +25,6 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'device_key',
     ];
 
     /**
@@ -80,5 +79,10 @@ class User extends Authenticatable implements JWTSubject
     public function getTakenBy()
     {
         return $this->hasMany(LogReport::class, 'taken_by', 'id');
+    }
+
+    public function getToken()
+    {
+        return $this->hasMany(FcmToken::class, 'user_id', 'id');
     }
 }

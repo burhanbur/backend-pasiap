@@ -19,6 +19,8 @@ use App\Http\Controllers\Controller;
 
 use App\Utilities\Response;
 
+use App\Services\FirebaseService;
+
 use App\Models\Report;
 use App\Models\LogReport;
 
@@ -43,6 +45,7 @@ class ReportController extends Controller
 			foreach ($reports as $key => $value) {
 				$data[] = [
 					'id' => $value->id,
+					'code' => $value->code,
 					'category_id' => $value->cat_id,
 					'category_name' => $value->getCategory->name,
 					'reporter_id' => $value->reported_by,
@@ -82,8 +85,23 @@ class ReportController extends Controller
 			$value = Report::find($id);
 
 			if ($value) {
+				$logs = LogReport::where('report_id', $value->id)->get();
+
+				$arrLog = [];
+				foreach ($logs as $key => $log) {
+					$arrLog[] = [
+						'id' => $log->id,
+						'report_id' => $value->id,
+						'description' => $value->description,
+						'status_id' => $log->status,
+						'status_name' => @$log->getStatus->name,
+						'created_at' => date('Y-m-d H:i:s', strtotime($log->created_at)),
+					];
+				}
+
 				$data = [
 					'id' => $value->id,
+					'code' => $value->code,
 					'category_id' => $value->cat_id,
 					'category_name' => $value->getCategory->name,
 					'reporter_id' => $value->reported_by,
@@ -96,7 +114,8 @@ class ReportController extends Controller
 					'description' => $value->description,
 					'status_id' => $value->status,
 					'status_name' => $value->getStatus->name,
-					'created_at' => date('Y-m-d H:i:s', strtotime($value->created_at))
+					'created_at' => date('Y-m-d H:i:s', strtotime($value->created_at)),
+					'logs' => $arrLog,
 				];
 
 				$code = 200;
@@ -127,6 +146,7 @@ class ReportController extends Controller
 			foreach ($reports as $key => $value) {
 				$data[] = [
 					'id' => $value->id,
+					'code' => $value->code,
 					'category_id' => $value->cat_id,
 					'category_name' => $value->getCategory->name,
 					'reporter_id' => $value->reported_by,
@@ -168,6 +188,7 @@ class ReportController extends Controller
 			foreach ($reports as $key => $value) {
 				$data[] = [
 					'id' => $value->id,
+					'code' => $value->code,
 					'category_id' => $value->cat_id,
 					'category_name' => $value->getCategory->name,
 					'reporter_id' => $value->reported_by,
@@ -209,6 +230,7 @@ class ReportController extends Controller
 			foreach ($reports as $key => $value) {
 				$data[] = [
 					'id' => $value->id,
+					'code' => $value->code,
 					'category_id' => $value->cat_id,
 					'category_name' => $value->getCategory->name,
 					'reporter_id' => $value->reported_by,
@@ -247,13 +269,14 @@ class ReportController extends Controller
             'cat_id' => 'required',
             'reported_by' => 'required',
             'description' => 'required|string',
-            'photo' => 'file|mimes:jpeg,png|max:2048',
+            'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if($validator->fails()){
         	$returnValue = [
         		'success' => false,
-        		'message' => $validator->errors()
+        		'message' => $validator->errors(),
+                'url' => $this->endpoint()
         	];
 
             return response()->json($returnValue, $code);
@@ -279,13 +302,23 @@ class ReportController extends Controller
 
             $report->save();
 
+            $a = Report::find($report->id);
+            $a->code = 'BE' . str_pad($report->id, 5, '0', STR_PAD_LEFT);
+            $a->save();
+
             $log = new LogReport;
             $log->report_id = $report->id;
             $log->status = 1;
             $log->save(); 
 
+            // send push notification
+            $service = new FirebaseService;
+            $service->sendNotificationToOfficer($report->code);
+            $service->sendNotificationReportStatus($request->reported_by, $report->status);
+
 			$data = [
 				'id' => $report->id,
+				'code' => $a->code,
 				'category_id' => $report->cat_id,
 				'category_name' => $report->getCategory->name,
 				'reporter_id' => $report->reported_by,
@@ -384,6 +417,7 @@ class ReportController extends Controller
 
 			$data = [
 				'id' => $report->id,
+				'code' => $report->code,
 				'category_id' => $report->cat_id,
 				'category_name' => $report->getCategory->name,
 				'reporter_id' => $report->reported_by,
@@ -458,10 +492,15 @@ class ReportController extends Controller
             $log->report_id = $report->id;
             $log->taken_by = $request->taken_by;
             $log->status = $request->status;
-            $log->save(); 
+            $log->save();
+
+            // send push notification 
+            $service = new FirebaseService;
+            $service->sendNotificationReportStatus($report->status);
 
 			$data = [
 				'id' => $report->id,
+				'code' => $report->code,
 				'category_id' => $report->cat_id,
 				'category_name' => $report->getCategory->name,
 				'reporter_id' => $report->reported_by,

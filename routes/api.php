@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DropdownController;
 use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\UserController;
 
@@ -42,11 +43,17 @@ Route::group([
         'verified'
     ]
 ], function () {
+    // firebase
+    Route::post('tokens', [UserController::class, 'storeTokenFcm']);
+
     // categories
     Route::get('categories', [CategoryController::class, 'getAllCategories']);
 
     // faq
-    Route::get('faq', [FaqController::class, 'getAllFaq']);
+    Route::get('faq', [FaqController::class, 'index']);
+    Route::post('faq', [FaqController::class, 'store']);
+    Route::put('faq{id}', [FaqController::class, 'update']);
+    Route::delete('faq/{id}', [FaqController::class, 'delete']);
 
     // profiles
     Route::get('profiles/{id}', [UserController::class, 'getProfile']);

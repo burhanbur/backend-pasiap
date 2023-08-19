@@ -51,7 +51,7 @@ class HomeController extends Controller
         $url = 'https://fcm.googleapis.com/fcm/send';
         $FcmToken = User::whereNotNull('device_key')->pluck('device_key')->all();
           
-        $serverKey = 'AAAAfKAHWRk:APA91bE5Rd3FlBL0Zrw79x9dkXH9J08T1qiT38shsIgeqGfeZGH_q1xiKOsrNfymmr3KbU-dvkhKUlhFB2mKzux1uopkDfwdQok8FAXc_jDPLuw1Wz7aKKlBayctrQiYxGXBRg44wLoC';
+        $serverKey = env('FIREBASE_KEY');
   
         $data = [
             "registration_ids" => $FcmToken,
