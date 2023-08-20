@@ -364,7 +364,7 @@ class ReportController extends Controller
         $validator = Validator::make($request->all(), [
             'cat_id' => 'required',
             'description' => 'required|string',
-            'photo' => 'file|mimes:jpeg,png|max:2048',
+            'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if($validator->fails()){

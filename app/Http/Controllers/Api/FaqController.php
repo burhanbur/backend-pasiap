@@ -27,7 +27,7 @@ class FaqController extends Controller
 {
     use Response;
 
-    public function getAllFaq(Request $request)
+    public function index(Request $request)
     {
         $returnValue = [];
         $code = 400;
@@ -42,6 +42,131 @@ class FaqController extends Controller
                 'url' => $this->endpoint()
             ];            
         } catch (Exception $ex) {
+            return $this->error($ex);
+        }
+
+        return response()->json($returnValue, $code);
+    }
+
+    public function store(Request $request)
+    {
+        $returnValue = [];
+        $code = 400;
+
+        $validator = Validator::make($request->all(), [
+            'question' => 'required',
+            'answer' => 'required',
+        ]);
+
+        if($validator->fails()){
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
+                'url' => $this->endpoint()
+            ];
+
+            return response()->json($returnValue, $code);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $data = new Faq;
+            $data->question = $request->question;
+            $data->answer = $request->answer;
+            $data->save();
+
+            $code = 200;
+            $returnValue = [
+                'success' => true, 
+                'data' => $data,
+                'url' => $this->endpoint()
+            ];
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+
+        return response()->json($returnValue, $code);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $returnValue = [];
+        $code = 400;
+
+        $validator = Validator::make($request->all(), [
+            'question' => 'required',
+            'answer' => 'required',
+        ]);
+
+        if($validator->fails()){
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
+                'url' => $this->endpoint()
+            ];
+
+            return response()->json($returnValue, $code);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $data = Faq::find($id);
+
+            if (!$data) {
+                throw new Exception("Data not found", 404);
+            }
+
+            $data->question = $request->question;
+            $data->answer = $request->answer;
+            $data->save();
+
+            $code = 200;
+            $returnValue = [
+                'success' => true, 
+                'data' => $data,
+                'url' => $this->endpoint()
+            ];
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+
+        return response()->json($returnValue, $code);
+    }
+
+    public function delete($id)
+    {
+        $returnValue = [];
+        $code = 400;
+
+        DB::beginTransaction();
+
+        try {
+            $data = Faq::find($id);
+
+            if (!$data) {
+                throw new Exception("Data not found", 404);
+            }
+
+            $data->delete();
+
+            $code = 200;
+            $returnValue = [
+                'success' => true, 
+                'data' => $data,
+                'url' => $this->endpoint()
+            ];
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
             return $this->error($ex);
         }
 

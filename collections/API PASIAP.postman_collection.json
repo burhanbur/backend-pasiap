@@ -280,13 +280,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/profiles/2",
+							"raw": "{{base_url}}/profiles",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"profiles",
-								"2"
+								"profiles"
 							]
 						}
 					},
@@ -349,13 +348,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/profiles/13",
+							"raw": "{{base_url}}/profiles",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"profiles",
-								"13"
+								"profiles"
 							]
 						}
 					},
@@ -659,6 +657,107 @@
 							],
 							"path": [
 								"faq"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store faq",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "question",
+									"value": "halo",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "oi manglu",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/faq",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"faq"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update faq",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "question",
+									"value": "halo",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "oi manglu",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/faq/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"faq",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete faq",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/faq/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"faq",
+								"1"
 							]
 						}
 					},

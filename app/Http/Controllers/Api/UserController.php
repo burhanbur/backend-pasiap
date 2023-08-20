@@ -32,7 +32,7 @@ class UserController extends Controller
 {
     use Response;
 
-    public function getProfile(Request $request, $id)
+    public function getProfile(Request $request)
     {
         $data = [];
         $returnValue = [];
@@ -40,6 +40,11 @@ class UserController extends Controller
         $code = 400;
 
         try {
+            $token = JWTAuth::getToken();
+            $payload = JWTAuth::getPayload($token)->toArray();
+
+            $id = $payload['sub'];
+
             $user = User::select('id', 'name', 'username', 'email')->where('id', $id)->first();
             $profile = Profile::select('sid', 'birth_place', 'birth_date', 'sex', 'religion', 'marital_status', 'phone', 'identity_card_photo', 'photo')->where('user_id', $id)->first();
 
@@ -72,7 +77,7 @@ class UserController extends Controller
         return response()->json($returnValue, $code);
     }
 
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request)
     {
         $returnValue = [];
 
@@ -82,8 +87,8 @@ class UserController extends Controller
             'name' => 'required|string',
             'phone' => 'required|string',
             'sid' => 'required|string|size:16',
-            'identity_card_photo' => 'file|mimes:jpeg,png|max:2048',
-            'photo' => 'file|mimes:jpeg,png|max:2048',
+            'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if($validator->fails()){
@@ -99,6 +104,11 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
+            $token = JWTAuth::getToken();
+            $payload = JWTAuth::getPayload($token)->toArray();
+
+            $id = $payload['sub'];
+
             $user = User::find($id);
             $user->name = $request->name;
             $user->save();

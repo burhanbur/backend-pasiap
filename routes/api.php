@@ -56,8 +56,8 @@ Route::group([
     Route::delete('faq/{id}', [FaqController::class, 'delete']);
 
     // profiles
-    Route::get('profiles/{id}', [UserController::class, 'getProfile']);
-    Route::post('profiles/{id}', [UserController::class, 'updateProfile']);
+    Route::get('profiles', [UserController::class, 'getProfile']);
+    Route::post('profiles', [UserController::class, 'updateProfile']);
 
     // reports
     Route::get('reports', [ReportController::class, 'getReports']);
