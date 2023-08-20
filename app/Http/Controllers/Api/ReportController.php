@@ -33,6 +33,19 @@ class ReportController extends Controller
 
 	protected $path = 'assets/';
 
+    /**
+     * @OA\Get(
+     *    path="/reports",
+     *    operationId="getReports",
+     *    tags={"Reports"},
+     *    description="Get all reports",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function getReports(Request $request)
 	{
     	$returnValue = [];
@@ -75,6 +88,26 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);
 	}
 
+    /**
+     * @OA\Get(
+     *    path="/reports/{id}",
+     *    operationId="getReportById",
+     *    tags={"Reports"},
+     *    description="Get detail report by ID",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID of the data to show",
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function getReportById(Request $request, $id)
 	{
     	$returnValue = [];
@@ -134,6 +167,26 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);		
 	}
 
+    /**
+     * @OA\Get(
+     *    path="/reports/status/{id}",
+     *    operationId="getReportByStatus",
+     *    tags={"Reports"},
+     *    description="Get detail report by ID status",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID status of the data to show",
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function getReportByStatus(Request $request, $id)
 	{
 		$returnValue = [];
@@ -176,6 +229,26 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);
 	}
 
+    /**
+     * @OA\Get(
+     *    path="/reports/handler/{id}",
+     *    operationId="getReportByHandler",
+     *    tags={"Reports"},
+     *    description="Get detail report by ID handler reports",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID handler reports of the data to show",
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function getReportByHandler(Request $request, $id)
 	{
 		$returnValue = [];
@@ -218,6 +291,26 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);
 	}
 
+    /**
+     * @OA\Get(
+     *    path="/reports/request/{id}",
+     *    operationId="getReportByRequest",
+     *    tags={"Reports"},
+     *    description="Get detail report by ID requestor reports",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID requestor reports of the data to show",
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function getReportByRequest(Request $request, $id)
 	{
 		$returnValue = [];
@@ -260,10 +353,44 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);		
 	}
 
+    /**
+     * @OA\Post(
+     *    path="/reports",
+     *    operationId="createReport",
+     *    tags={"Reports"},
+     *    description="Create new report",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *                @OA\Property(property="cat_id", type="string"),
+     *                @OA\Property(property="reported_by", type="string"),
+     *                @OA\Property(property="lat", type="string"),
+     *                @OA\Property(property="long", type="string"),
+     *                @OA\Property(property="description", type="string"),
+     *                @OA\Property(property="status", type="integer"),
+     *                @OA\Property(property="photo", type="file"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function createReport(Request $request)
 	{
 		$returnValue = [];
 		$code = 400;
+        
+        $folderPath = public_path('reports');
+
+        if (!File::isDirectory($folderPath)) {
+            File::makeDirectory($folderPath, 0777, true);
+        }
 
         $validator = Validator::make($request->all(), [
             'cat_id' => 'required',
@@ -356,10 +483,47 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);
 	}
 
+    /**
+     * @OA\Post(
+     *    path="/reports/{id}",
+     *    operationId="updateReport",
+     *    tags={"Reports"},
+     *    description="Update report by ID",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID of the data to update",
+     *    ),
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *                @OA\Property(property="cat_id", type="string"),
+     *                @OA\Property(property="description", type="string"),
+     *                @OA\Property(property="photo", type="file"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function updateReport(Request $request, $id)
 	{
 		$returnValue = [];
 		$code = 400;
+        
+        $folderPath = public_path('reports');
+
+        if (!File::isDirectory($folderPath)) {
+            File::makeDirectory($folderPath, 0777, true);
+        }
 
         $validator = Validator::make($request->all(), [
             'cat_id' => 'required',
@@ -455,6 +619,36 @@ class ReportController extends Controller
 		return response()->json($returnValue, $code);
 	}
 
+    /**
+     * @OA\Post(
+     *    path="/reports/status/{id}",
+     *    operationId="updateReportStatus",
+     *    tags={"Reports"},
+     *    description="Update report status by Report ID",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID of the data to update",
+     *    ),
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="taken_by", type="integer"),
+     *                @OA\Property(property="status", type="integer"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
 	public function updateReportStatus(Request $request, $id)
 	{
 		$returnValue = [];

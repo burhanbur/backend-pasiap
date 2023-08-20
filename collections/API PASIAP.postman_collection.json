@@ -37,6 +37,38 @@
 					"response": []
 				},
 				{
+					"name": "change password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"user123\",\r\n    \"password_confirmation\": \"tnugraha\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "register",
 					"request": {
 						"method": "POST",

@@ -27,6 +27,19 @@ class FaqController extends Controller
 {
     use Response;
 
+    /**
+     * @OA\Get(
+     *    path="/faq",
+     *    operationId="getAllFaq",
+     *    tags={"Faq"},
+     *    description="Get all data FAQ",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function index(Request $request)
     {
         $returnValue = [];
@@ -48,6 +61,29 @@ class FaqController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Post(
+     *    path="/faq",
+     *    operationId="storeFaq",
+     *    tags={"Faq"},
+     *    description="Add faq",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="question", type="string"),
+     *                @OA\Property(property="answer", type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function store(Request $request)
     {
         $returnValue = [];
@@ -141,6 +177,26 @@ class FaqController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Delete(
+     *    path="/faq/{id}",
+     *    operationId="deleteFaq",
+     *    tags={"Faq"},
+     *    description="Delete faq by ID",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID of the data to delete",
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function delete($id)
     {
         $returnValue = [];

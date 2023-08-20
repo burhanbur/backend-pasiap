@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
+Route::post('refresh', [AuthController::class, 'refreshToken'])->name('refresh');
 
 // dropdown
 Route::group(['prefix' => 'dropdown'], function () {
@@ -65,6 +66,7 @@ Route::group([
     Route::get('reports/status/{id}', [ReportController::class, 'getReportByStatus']);
     Route::get('reports/handler/{id}', [ReportController::class, 'getReportByHandler']);
     Route::get('reports/request/{id}', [ReportController::class, 'getReportByRequest']);
+
     Route::post('reports', [ReportController::class, 'createReport']);
     Route::post('reports/{id}', [ReportController::class, 'updateReport']);
 
@@ -72,7 +74,7 @@ Route::group([
     Route::post('reports/status/{id}', [ReportController::class, 'updateReportStatus']);
 
     // auth
-    Route::post('password/{id}', [AuthController::class, 'changePassword']);
+    Route::post('password', [AuthController::class, 'changePassword']);
     Route::post('refresh', [AuthController::class, 'refreshToken']);
     Route::post('logout', [AuthController::class, 'logout']);
 });

@@ -26,12 +26,25 @@ class CategoryController extends Controller
 {
     use Response;
 
+    /**
+     * @OA\Get(
+     *    path="/categories",
+     *    operationId="getAllCategories",
+     *    tags={"Categories"},
+     *    description="Register account",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function getAllCategories(Request $request)
     {
         $code = 400;
 
         try {
-            $data = Category::orderBy('code', 'ASC')->get();
+            $data = Category::select('id', 'code', 'name')->orderBy('code', 'ASC')->get();
 
             $code = 200;
             $returnValue = [

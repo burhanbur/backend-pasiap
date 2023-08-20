@@ -32,6 +32,19 @@ class UserController extends Controller
 {
     use Response;
 
+    /**
+     * @OA\Get(
+     *    path="/profiles",
+     *    operationId="getProfile",
+     *    tags={"Profiles"},
+     *    description="Get data profile account",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function getProfile(Request $request)
     {
         $data = [];
@@ -77,6 +90,37 @@ class UserController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Post(
+     *    path="/profiles",
+     *    operationId="updateProfile",
+     *    tags={"Profiles"},
+     *    description="Update data profile account",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *                @OA\Property(property="name", type="string"),
+     *                @OA\Property(property="phone", type="string"),
+     *                @OA\Property(property="sid", type="string"),
+     *                @OA\Property(property="birth_place", type="string"),
+     *                @OA\Property(property="birth_date", type="string"),
+     *                @OA\Property(property="sex", type="string"),
+     *                @OA\Property(property="religion", type="string"),
+     *                @OA\Property(property="marital_status", type="string"),
+     *                @OA\Property(property="identity_card_photo", type="file"),
+     *                @OA\Property(property="photo", type="file"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function updateProfile(Request $request)
     {
         $returnValue = [];
@@ -175,6 +219,28 @@ class UserController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Post(
+     *    path="/tokens",
+     *    operationId="storeTokenFcm",
+     *    tags={"Profiles"},
+     *    description="Store token firebase into profile account",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="token", type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function storeTokenFcm(Request $request)
     {
         $code = 400;

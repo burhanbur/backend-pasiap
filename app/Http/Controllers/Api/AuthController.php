@@ -161,6 +161,11 @@ class AuthController extends Controller
     	$returnValue = [];
 
         $path = 'assets/';
+        $folderPath = public_path('assets');
+
+        if (!File::isDirectory($folderPath)) {
+            File::makeDirectory($folderPath, 0777, true);
+        }
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -208,6 +213,12 @@ class AuthController extends Controller
             $profile->phone = $request->phone;
 
             if ($request->file('identity_card_photo')) {
+                $folderPath = public_path('assets/identity_card_photo');
+
+                if (!File::isDirectory($folderPath)) {
+                    File::makeDirectory($folderPath, 0777, true);
+                }
+
                 $image = $request->file('identity_card_photo');
                 $file_image = str_replace(' ', '_', $user->id . '_' . $image->getClientOriginalName());
                 $image->move($path . 'identity_card_photo', $file_image);
@@ -215,6 +226,12 @@ class AuthController extends Controller
             }
 
             if ($request->file('photo')) {
+                $folderPath = public_path('assets/photo');
+
+                if (!File::isDirectory($folderPath)) {
+                    File::makeDirectory($folderPath, 0777, true);
+                }
+                
                 $photo = $request->file('photo');
                 $file_photo = str_replace(' ', '_', $user->id . '_' . $photo->getClientOriginalName());
                 $photo->move($path . 'photo', $file_photo);
@@ -269,6 +286,27 @@ class AuthController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Post(
+     *    path="/refresh",
+     *    operationId="refreshToken",
+     *    tags={"Authentications"},
+     *    description="Refresh token JWT",
+     *    @OA\RequestBody(
+     *        required=false,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="token", type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function refreshToken(Request $request)
     {
     	$returnValue = [];
@@ -299,7 +337,30 @@ class AuthController extends Controller
         return response()->json($returnValue, $code);
     }
 
-    public function changePassword(Request $request, $id)
+    /**
+     * @OA\Post(
+     *    path="/password",
+     *    operationId="changePassword",
+     *    tags={"Authentications"},
+     *    description="Update password user account",
+     *    security={{"bearerAuth": {}}},
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="password", type="string"),
+     *                @OA\Property(property="password_confirmation", type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
+    public function changePassword(Request $request)
     {
         $returnValue = [];
 
@@ -320,13 +381,18 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         try {
+            $token = JWTAuth::getToken();
+            $payload = JWTAuth::getPayload($token)->toArray();
+
+            $id = $payload['sub'];
+
             $user = User::find($id);
             $user->password = Hash::make($request->password);
             $user->save();
 
             DB::commit();
 
-            $code = 201;
+            $code = 200;
             $returnValue = [
                 'success' => true, 
                 'data' => $data,

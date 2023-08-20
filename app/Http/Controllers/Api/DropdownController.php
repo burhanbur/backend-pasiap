@@ -28,6 +28,18 @@ class DropdownController extends Controller
 {
     use Response;
 
+    /**
+     * @OA\Get(
+     *    path="/dropdown/religions",
+     *    operationId="getAllReligions",
+     *    tags={"Dropdown"},
+     *    description="Dropdown all religions",
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function getAllReligions(Request $request)
     {
         $returnValue = [];
@@ -49,6 +61,18 @@ class DropdownController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Get(
+     *    path="/dropdown/status",
+     *    operationId="getAllStatus",
+     *    tags={"Dropdown"},
+     *    description="Dropdown all report status",
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function getAllStatus(Request $request)
     {
         $returnValue = [];
@@ -70,6 +94,18 @@ class DropdownController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Get(
+     *    path="/dropdown/sexs",
+     *    operationId="getAllSexs",
+     *    tags={"Dropdown"},
+     *    description="Dropdown all sexs",
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function getAllSexs()
     {
         $data = [];
@@ -86,6 +122,18 @@ class DropdownController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Get(
+     *    path="/dropdown/marital_status",
+     *    operationId="getAllMaritalStatus",
+     *    tags={"Dropdown"},
+     *    description="Dropdown all marital status",
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function getAllMaritalStatus()
     {
         $data = [];
