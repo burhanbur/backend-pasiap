@@ -100,7 +100,7 @@ class UserController extends Controller
      *    @OA\RequestBody(
      *        required=true,
      *        @OA\MediaType(
-     *            mediaType="multipart/form-data",
+     *            mediaType="application/json",
      *            @OA\Schema(
      *                @OA\Property(property="name", type="string"),
      *                @OA\Property(property="phone", type="string"),
@@ -110,8 +110,8 @@ class UserController extends Controller
      *                @OA\Property(property="sex", type="string"),
      *                @OA\Property(property="religion", type="string"),
      *                @OA\Property(property="marital_status", type="string"),
-     *                @OA\Property(property="identity_card_photo", type="file"),
-     *                @OA\Property(property="photo", type="file"),
+     *                @OA\Property(property="identity_card_photo", type="string"),
+     *                @OA\Property(property="photo", type="string"),
      *            ),
      *        ),
      *    ),
@@ -131,8 +131,8 @@ class UserController extends Controller
             'name' => 'required|string',
             'phone' => 'required|string',
             'sid' => 'required|string|size:16',
-            'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            // 'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if($validator->fails()){
@@ -167,17 +167,71 @@ class UserController extends Controller
             $profile->marital_status = $request->marital_status;
             $profile->phone = $request->phone;
 
-            if ($request->file('identity_card_photo')) {
-                $image = $request->file('identity_card_photo');
-                $file_image = str_replace(' ', '_', $user->id . '_' . $image->getClientOriginalName());
-                $image->move($path . 'identity_card_photo', $file_image);
+            if ($request->identity_card_photo) {
+                $image = base64_decode($request->identity_card_photo);
+
+                $file_image = str_replace(' ', '_', $user->id . '_' . strtotime(date('Y-m-d H:i:s')));
+
+                $finfo = finfo_open();
+                $mimeType = finfo_buffer($finfo, $image, FILEINFO_MIME_TYPE);
+                finfo_close($finfo);
+
+                $format = [
+                    'image/jpg' => 'jpg', 
+                    'image/jpeg' => 'jpeg', 
+                    'image/png' => 'png'
+                ];
+
+                if (isset($format[$mimeType])) {
+                    $extension = $format[$mimeType];
+                } else {
+                    throw new Exception("The photo must be a file of type: jpeg, jpg, png.", 400);
+                }
+
+                $file_image .= '.' . $extension;
+
+                $image_size = strlen($image);
+
+                if ($image_size > 2097152) {
+                    throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+                }
+
+                $file_path = public_path('assets') . '/identity_card_photo/' . $file_image;
+                file_put_contents($file_path, $image);
                 $profile->identity_card_photo = $file_image;
             }
 
-            if ($request->file('photo')) {
-                $photo = $request->file('photo');
-                $file_photo = str_replace(' ', '_', $user->id . '_' . $photo->getClientOriginalName());
-                $photo->move($path . 'photo', $file_photo);
+            if ($request->photo) {
+                $image = base64_decode($request->photo);
+
+                $file_photo = str_replace(' ', '_', $user->id . '_' . strtotime(date('Y-m-d H:i:s')));
+
+                $finfo = finfo_open();
+                $mimeType = finfo_buffer($finfo, $image, FILEINFO_MIME_TYPE);
+                finfo_close($finfo);
+
+                $format = [
+                    'image/jpg' => 'jpg', 
+                    'image/jpeg' => 'jpeg', 
+                    'image/png' => 'png'
+                ];
+
+                if (isset($format[$mimeType])) {
+                    $extension = $format[$mimeType];
+                } else {
+                    throw new Exception("The photo must be a file of type: jpeg, jpg, png.", 400);
+                }
+
+                $file_photo .= '.' . $extension;
+
+                $image_size = strlen($image);
+
+                if ($image_size > 2097152) {
+                    throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+                }
+
+                $file_path = public_path('assets') . '/photo/' . $file_photo;
+                file_put_contents($file_path, $image);
                 $profile->photo = $file_photo;
             }
 

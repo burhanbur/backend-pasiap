@@ -363,7 +363,7 @@ class ReportController extends Controller
      *    @OA\RequestBody(
      *        required=true,
      *        @OA\MediaType(
-     *            mediaType="multipart/form-data",
+     *            mediaType="application/json",
      *            @OA\Schema(
      *                @OA\Property(property="cat_id", type="string"),
      *                @OA\Property(property="reported_by", type="string"),
@@ -371,7 +371,7 @@ class ReportController extends Controller
      *                @OA\Property(property="long", type="string"),
      *                @OA\Property(property="description", type="string"),
      *                @OA\Property(property="status", type="integer"),
-     *                @OA\Property(property="photo", type="file"),
+     *                @OA\Property(property="photo", type="string"),
      *            ),
      *        ),
      *    ),
@@ -396,7 +396,8 @@ class ReportController extends Controller
             'cat_id' => 'required',
             'reported_by' => 'required',
             'description' => 'required|string',
-            'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            'photo' => 'required',
+            // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if($validator->fails()){
@@ -420,11 +421,38 @@ class ReportController extends Controller
 			$report->description = $request->description;
 			$report->status = 1; // PROSES
 
-            if ($request->file('photo')) {
-                $image = $request->file('photo');
-                $file_image = str_replace(' ', '_', strtotime(date('Y-m-d H:i:s')) . '_' . $image->getClientOriginalName());
-                $image->move('reports', $file_image);
-                $report->photo = $file_image;
+            if ($request->photo) {
+            	$image = base64_decode($request->photo);
+
+            	$file_image = str_replace(' ', '_', strtotime(date('Y-m-d H:i:s')));
+
+            	$finfo = finfo_open();
+		        $mimeType = finfo_buffer($finfo, $image, FILEINFO_MIME_TYPE);
+		        finfo_close($finfo);
+
+            	$format = [
+            		'image/jpg' => 'jpg', 
+            		'image/jpeg' => 'jpeg', 
+            		'image/png' => 'png'
+            	];
+
+            	if (isset($format[$mimeType])) {
+            		$extension = $format[$mimeType];
+            	} else {
+            		throw new Exception("The photo must be a file of type: jpeg, jpg, png.", 400);
+            	}
+
+		        $file_image .= '.' . $extension;
+
+		        $image_size = strlen($image);
+
+            	if ($image_size > 2097152) {
+            		throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+            	}
+
+            	$file_path = public_path('reports') . '/' . $file_image;
+            	file_put_contents($file_path, $image);
+            	$report->photo = $file_image;
             }
 
             $report->save();

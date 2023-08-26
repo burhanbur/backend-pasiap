@@ -212,29 +212,83 @@ class AuthController extends Controller
             $profile->marital_status = $request->marital_status;
             $profile->phone = $request->phone;
 
-            if ($request->file('identity_card_photo')) {
+            if ($request->identity_card_photo) {
                 $folderPath = public_path('assets/identity_card_photo');
 
                 if (!File::isDirectory($folderPath)) {
                     File::makeDirectory($folderPath, 0777, true);
                 }
 
-                $image = $request->file('identity_card_photo');
-                $file_image = str_replace(' ', '_', $user->id . '_' . $image->getClientOriginalName());
-                $image->move($path . 'identity_card_photo', $file_image);
+                $image = base64_decode($request->identity_card_photo);
+
+                $file_image = str_replace(' ', '_', $user->id . '_' . strtotime(date('Y-m-d H:i:s')));
+
+                $finfo = finfo_open();
+                $mimeType = finfo_buffer($finfo, $image, FILEINFO_MIME_TYPE);
+                finfo_close($finfo);
+
+                $format = [
+                    'image/jpg' => 'jpg', 
+                    'image/jpeg' => 'jpeg', 
+                    'image/png' => 'png'
+                ];
+
+                if (isset($format[$mimeType])) {
+                    $extension = $format[$mimeType];
+                } else {
+                    throw new Exception("The photo must be a file of type: jpeg, jpg, png.", 400);
+                }
+
+                $file_image .= '.' . $extension;
+
+                $image_size = strlen($image);
+
+                if ($image_size > 2097152) {
+                    throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+                }
+
+                $file_path = public_path('assets') . '/identity_card_photo/' . $file_image;
+                file_put_contents($file_path, $image);
                 $profile->identity_card_photo = $file_image;
             }
 
-            if ($request->file('photo')) {
+            if ($request->photo) {
                 $folderPath = public_path('assets/photo');
 
                 if (!File::isDirectory($folderPath)) {
                     File::makeDirectory($folderPath, 0777, true);
                 }
                 
-                $photo = $request->file('photo');
-                $file_photo = str_replace(' ', '_', $user->id . '_' . $photo->getClientOriginalName());
-                $photo->move($path . 'photo', $file_photo);
+                $image = base64_decode($request->photo);
+
+                $file_photo = str_replace(' ', '_', $user->id . '_' . strtotime(date('Y-m-d H:i:s')));
+
+                $finfo = finfo_open();
+                $mimeType = finfo_buffer($finfo, $image, FILEINFO_MIME_TYPE);
+                finfo_close($finfo);
+
+                $format = [
+                    'image/jpg' => 'jpg', 
+                    'image/jpeg' => 'jpeg', 
+                    'image/png' => 'png'
+                ];
+
+                if (isset($format[$mimeType])) {
+                    $extension = $format[$mimeType];
+                } else {
+                    throw new Exception("The photo must be a file of type: jpeg, jpg, png.", 400);
+                }
+
+                $file_photo .= '.' . $extension;
+
+                $image_size = strlen($image);
+
+                if ($image_size > 2097152) {
+                    throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+                }
+
+                $file_path = public_path('assets') . '/photo/' . $file_photo;
+                file_put_contents($file_path, $image);
                 $profile->photo = $file_photo;
             }
 

@@ -388,7 +388,7 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "properties": {
                                     "cat_id": {
@@ -410,7 +410,7 @@
                                         "type": "integer"
                                     },
                                     "photo": {
-                                        "type": "file"
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -672,7 +672,7 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "properties": {
                                     "name": {
@@ -700,10 +700,10 @@
                                         "type": "string"
                                     },
                                     "identity_card_photo": {
-                                        "type": "file"
+                                        "type": "string"
                                     },
                                     "photo": {
-                                        "type": "file"
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
