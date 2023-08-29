@@ -12,7 +12,7 @@ use App\Models\Profile;
 use App\Utilities\Response;
 
 use Illuminate\Http\Request;
- 
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -49,7 +49,7 @@ class AuthController extends Controller
      *        @OA\Schema(type="string")
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *        @OA\JsonContent(
      *           @OA\Property(property="success", type="boolean", example="true"),
@@ -106,7 +106,7 @@ class AuthController extends Controller
 	        } else {
 		        $code = 200;
 	        	$returnValue = [
-		        	'success' => true, 
+		        	'success' => true,
 		        	'token' => $token,
                     'url' => $this->endpoint()
 		        ];
@@ -151,7 +151,7 @@ class AuthController extends Controller
      *        ),
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -174,8 +174,10 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed',
             'phone' => 'required|string',
             'sid' => 'required|string|size:16',
-            'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            // 'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            'identity_card_photo' => 'required|string',
+            // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+            'photo' => 'required|string',
         ]);
 
         if($validator->fails()){
@@ -228,8 +230,8 @@ class AuthController extends Controller
                 finfo_close($finfo);
 
                 $format = [
-                    'image/jpg' => 'jpg', 
-                    'image/jpeg' => 'jpeg', 
+                    'image/jpg' => 'jpg',
+                    'image/jpeg' => 'jpeg',
                     'image/png' => 'png'
                 ];
 
@@ -258,7 +260,7 @@ class AuthController extends Controller
                 if (!File::isDirectory($folderPath)) {
                     File::makeDirectory($folderPath, 0777, true);
                 }
-                
+
                 $image = base64_decode($request->photo);
 
                 $file_photo = str_replace(' ', '_', $user->id . '_' . strtotime(date('Y-m-d H:i:s')));
@@ -268,8 +270,8 @@ class AuthController extends Controller
                 finfo_close($finfo);
 
                 $format = [
-                    'image/jpg' => 'jpg', 
-                    'image/jpeg' => 'jpeg', 
+                    'image/jpg' => 'jpg',
+                    'image/jpeg' => 'jpeg',
                     'image/png' => 'png'
                 ];
 
@@ -322,7 +324,7 @@ class AuthController extends Controller
 
             $code = 201;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
@@ -356,7 +358,7 @@ class AuthController extends Controller
      *        ),
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -368,14 +370,14 @@ class AuthController extends Controller
         try {
             if (!JWTAuth::getToken()) {
                 $refreshed = JWTAuth::refresh($request->get('token'));
-            } else {                
+            } else {
                 $refreshed = JWTAuth::refresh(JWTAuth::getToken());
             }
 
             $code = 200;
             $returnValue = array(
                 'success' => true,
-                'token' => $refreshed,                
+                'token' => $refreshed,
                 'url' => $this->endpoint()
             );
         } catch (JWTException $ex) {
@@ -409,7 +411,7 @@ class AuthController extends Controller
      *        ),
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -448,7 +450,7 @@ class AuthController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
@@ -470,7 +472,7 @@ class AuthController extends Controller
     {
     	$returnValue = [];
         $token = $request->header('Authorization');
-        
+
         try {
             JWTAuth::parseToken()->invalidate($token);
 
