@@ -41,7 +41,7 @@ class ReportController extends Controller
      *    description="Get all reports",
      *    security={{"bearerAuth": {}}},
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -77,12 +77,12 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
 		} catch (Exception $ex) {
-			return $this->error($ex);	
+			return $this->error($ex);
 		}
 
 		return response()->json($returnValue, $code);
@@ -103,7 +103,7 @@ class ReportController extends Controller
      *        description="ID of the data to show",
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -153,7 +153,7 @@ class ReportController extends Controller
 
 				$code = 200;
 	            $returnValue = [
-	                'success' => true, 
+	                'success' => true,
 	                'data' => $data,
 	                'url' => $this->endpoint()
 	            ];
@@ -161,10 +161,10 @@ class ReportController extends Controller
 				return $this->notFound();
 			}
 		} catch (Exception $ex) {
-			return $this->error($ex);	
+			return $this->error($ex);
 		}
 
-		return response()->json($returnValue, $code);		
+		return response()->json($returnValue, $code);
 	}
 
     /**
@@ -182,7 +182,7 @@ class ReportController extends Controller
      *        description="ID status of the data to show",
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -218,12 +218,12 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
 		} catch (Exception $ex) {
-			return $this->error($ex);	
+			return $this->error($ex);
 		}
 
 		return response()->json($returnValue, $code);
@@ -244,7 +244,7 @@ class ReportController extends Controller
      *        description="ID handler reports of the data to show",
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -280,12 +280,12 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
 		} catch (Exception $ex) {
-			return $this->error($ex);	
+			return $this->error($ex);
 		}
 
 		return response()->json($returnValue, $code);
@@ -306,7 +306,7 @@ class ReportController extends Controller
      *        description="ID requestor reports of the data to show",
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -342,15 +342,15 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
 		} catch (Exception $ex) {
-			return $this->error($ex);	
+			return $this->error($ex);
 		}
 
-		return response()->json($returnValue, $code);		
+		return response()->json($returnValue, $code);
 	}
 
     /**
@@ -376,7 +376,7 @@ class ReportController extends Controller
      *        ),
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -385,7 +385,7 @@ class ReportController extends Controller
 	{
 		$returnValue = [];
 		$code = 400;
-        
+
         $folderPath = public_path('reports');
 
         if (!File::isDirectory($folderPath)) {
@@ -396,7 +396,7 @@ class ReportController extends Controller
             'cat_id' => 'required',
             'reported_by' => 'required',
             'description' => 'required|string',
-            'photo' => 'required',
+            'photo' => ['required_if: cat_id,2,3'],
             // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
@@ -431,8 +431,8 @@ class ReportController extends Controller
 		        finfo_close($finfo);
 
             	$format = [
-            		'image/jpg' => 'jpg', 
-            		'image/jpeg' => 'jpeg', 
+            		'image/jpg' => 'jpg',
+            		'image/jpeg' => 'jpeg',
             		'image/png' => 'png'
             	];
 
@@ -464,7 +464,7 @@ class ReportController extends Controller
             $log = new LogReport;
             $log->report_id = $report->id;
             $log->status = 1;
-            $log->save(); 
+            $log->save();
 
             // send push notification
             $service = new FirebaseService;
@@ -491,7 +491,7 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
@@ -537,7 +537,7 @@ class ReportController extends Controller
      *        ),
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -546,7 +546,7 @@ class ReportController extends Controller
 	{
 		$returnValue = [];
 		$code = 400;
-        
+
         $folderPath = public_path('reports');
 
         if (!File::isDirectory($folderPath)) {
@@ -627,7 +627,7 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
@@ -672,7 +672,7 @@ class ReportController extends Controller
      *        ),
      *    ),
      *    @OA\Response(
-     *        response=200, 
+     *        response=200,
      *        description="Success",
      *    )
      * )
@@ -716,7 +716,7 @@ class ReportController extends Controller
             $log->status = $request->status;
             $log->save();
 
-            // send push notification 
+            // send push notification
             $service = new FirebaseService;
             $service->sendNotificationReportStatus($report->status);
 
@@ -740,7 +740,7 @@ class ReportController extends Controller
 
 			$code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
                 'url' => $this->endpoint()
             ];
