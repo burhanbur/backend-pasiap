@@ -175,9 +175,9 @@ class AuthController extends Controller
             'phone' => 'required|string',
             'sid' => 'required|string|size:16',
             // 'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'identity_card_photo' => 'required|string',
+            'identity_card_photo' => 'string',
             // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
-            'photo' => 'required|string',
+            'photo' => 'string',
         ]);
 
         if($validator->fails()){
