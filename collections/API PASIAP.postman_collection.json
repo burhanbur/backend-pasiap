@@ -834,6 +834,23 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "get apps info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/apps",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"apps"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

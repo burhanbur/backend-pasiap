@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DropdownController;
 use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\UserController;
@@ -29,6 +30,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('refresh', [AuthController::class, 'refreshToken'])->name('refresh');
+
+Route::get('apps', [HomeController::class, 'app']);
 
 // dropdown
 Route::group(['prefix' => 'dropdown'], function () {
