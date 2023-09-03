@@ -33,7 +33,6 @@ class FaqController extends Controller
      *    operationId="getAllFaq",
      *    tags={"Faq"},
      *    description="Get all data FAQ",
-     *    security={{"bearerAuth": {}}},
      *    @OA\Response(
      *        response=200, 
      *        description="Success",
@@ -67,7 +66,6 @@ class FaqController extends Controller
      *    operationId="storeFaq",
      *    tags={"Faq"},
      *    description="Add faq",
-     *    security={{"bearerAuth": {}}},
      *    @OA\RequestBody(
      *        required=true,
      *        @OA\MediaType(
@@ -183,7 +181,6 @@ class FaqController extends Controller
      *    operationId="deleteFaq",
      *    tags={"Faq"},
      *    description="Delete faq by ID",
-     *    security={{"bearerAuth": {}}},
      *    @OA\Parameter(
      *        name="id",
      *        in="path",

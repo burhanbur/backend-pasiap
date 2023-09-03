@@ -33,6 +33,12 @@ Route::post('refresh', [AuthController::class, 'refreshToken'])->name('refresh')
 
 Route::get('apps', [HomeController::class, 'app']);
 
+// faq
+Route::get('faq', [FaqController::class, 'index']);
+Route::post('faq', [FaqController::class, 'store']);
+Route::put('faq{id}', [FaqController::class, 'update']);
+Route::delete('faq/{id}', [FaqController::class, 'delete']);
+
 // dropdown
 Route::group(['prefix' => 'dropdown'], function () {
     Route::get('religions', [DropdownController::class, 'getAllReligions']);
@@ -52,12 +58,6 @@ Route::group([
 
     // categories
     Route::get('categories', [CategoryController::class, 'getAllCategories']);
-
-    // faq
-    Route::get('faq', [FaqController::class, 'index']);
-    Route::post('faq', [FaqController::class, 'store']);
-    Route::put('faq{id}', [FaqController::class, 'update']);
-    Route::delete('faq/{id}', [FaqController::class, 'delete']);
 
     // profiles
     Route::get('profiles', [UserController::class, 'getProfile']);

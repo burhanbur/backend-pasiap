@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 use App\Utilities\Response;
 
 use App\Models\FcmToken;
+use App\Models\LogProfile;
 use App\Models\Profile;
 use App\Models\User;
 
@@ -131,6 +132,8 @@ class UserController extends Controller
             'name' => 'required|string',
             'phone' => 'required|string',
             'sid' => 'required|string|size:16',
+            'identity_card_photo' => 'nullable|string',
+            'photo' => 'nullable|string',
             // 'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
             // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
@@ -153,7 +156,26 @@ class UserController extends Controller
 
             $id = $payload['sub'];
 
+            // check log profile
+            $month = date('m');
+            $log = LogProfile::where(arra('user_id' => $id, 'column' => 'name'))->whereMonth('created_at')->exists();
+
+            if ($log) {
+                throw new Exception("Cannot update your name in this month", 1);
+            }
+
             $user = User::find($id);
+
+            if ($user->name != $request->name) {
+                LogProfile::create([
+                    'user_id' => $id,
+                    'updated_by' => $id,
+                    'column' => 'name',
+                    'old_value' => $user->name,
+                    'new_value' => $request->name
+                ]);
+            }
+
             $user->name = $request->name;
             $user->save();
 
