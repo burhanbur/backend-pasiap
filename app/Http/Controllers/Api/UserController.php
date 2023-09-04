@@ -157,8 +157,11 @@ class UserController extends Controller
             $id = $payload['sub'];
 
             // check log profile
-            $month = date('m');
-            $log = LogProfile::where(arra('user_id' => $id, 'column' => 'name'))->whereMonth('created_at', date('m'))->whereYear('created_at', date('y'))->exists();
+            $log = LogProfile::where('user_id', $id)
+            ->where('column', 'name')
+            ->whereMonth('created_at', date('m'))
+            ->whereYear('created_at', date('y'))
+            ->exists();
 
             if ($log) {
                 throw new Exception("Cannot update your name in this month", 1);
