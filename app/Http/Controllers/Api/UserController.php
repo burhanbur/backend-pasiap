@@ -160,11 +160,18 @@ class UserController extends Controller
             $log = LogProfile::where('user_id', $id)
             ->where('column', 'name')
             ->whereMonth('created_at', date('m'))
-            ->whereYear('created_at', date('y'))
+            ->whereYear('created_at', date('Y'))
             ->exists();
 
             if ($log) {
-                throw new Exception("Cannot update your name in this month", 1);
+                $code = 400;
+                $returnValue = [
+                    'success' => false, 
+                    'message' => 'Cannot update your name in this month',
+                    'url' => $this->endpoint()
+                ];
+
+                return response()->json($returnValue, $code);
             }
 
             $user = User::find($id);
