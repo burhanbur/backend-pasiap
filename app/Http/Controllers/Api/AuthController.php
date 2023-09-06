@@ -446,14 +446,14 @@ class AuthController extends Controller
             $user->password = Hash::make($request->password);
             $user->save();
 
-            DB::commit();
-
             $code = 200;
             $returnValue = [
                 'success' => true,
-                'data' => $data,
+                'data' => $user,
                 'url' => $this->endpoint()
             ];
+
+            DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
             return $this->error($ex);
