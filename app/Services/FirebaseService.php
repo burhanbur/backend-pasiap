@@ -93,9 +93,11 @@ class FirebaseService
 
 		// save to log notification
 		LogNotification::create([
-			'code' => $code,
-			'status' => $returnValue['success'],
-			'message' => $returnValue['message']
+			'payload' => json_encode([
+				'code' => $code,
+				'status' => $returnValue['success'],
+				'message' => $returnValue['message']
+			])
 		]);
 
 		return $returnValue;
@@ -182,9 +184,12 @@ class FirebaseService
 
 		// save to log notification
 		LogNotification::create([
-			'code' => $code,
-			'status' => $returnValue['success'],
-			'message' => $returnValue['message']
+			'payload' => json_encode([
+				'reported_by' => $reported_by,
+				'status' => $status,
+				'status' => $returnValue['success'],
+				'message' => $returnValue['message']
+			])
 		]);
 
 		return $returnValue;
