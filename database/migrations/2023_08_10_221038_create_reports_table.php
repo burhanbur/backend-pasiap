@@ -22,7 +22,7 @@ class CreateReportsTable extends Migration
             $table->unsignedBigInteger('taken_by')->nullable();
             $table->foreign('taken_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('code')->nullable();
-            $table->string('location')->nullable();
+            $table->longText('location')->nullable();
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
             $table->string('photo')->nullable();

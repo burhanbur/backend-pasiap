@@ -67,6 +67,7 @@ class ReportController extends Controller
 					'handler_name' => @$value->getTakenBy->name,
 					'lat' => $value->lat,
 					'long' => $value->long,
+					'location' => $value->location,
 					'photo' => URL::to('/') . ($value->photo) ? URL::to('/') . '/reports/' . $value->photo : '',
 					'description' => $value->description,
 					'status_id' => $value->status,
@@ -143,6 +144,7 @@ class ReportController extends Controller
 					'handler_name' => @$value->getTakenBy->name,
 					'lat' => $value->lat,
 					'long' => $value->long,
+					'location' => $value->location,
 					'photo' => URL::to('/') . ($value->photo) ? URL::to('/') . '/reports/' . $value->photo : '',
 					'description' => $value->description,
 					'status_id' => $value->status,
@@ -208,6 +210,7 @@ class ReportController extends Controller
 					'handler_name' => @$value->getTakenBy->name,
 					'lat' => $value->lat,
 					'long' => $value->long,
+					'location' => $value->location,
 					'photo' => URL::to('/') . ($value->photo) ? URL::to('/') . '/reports/' . $value->photo : '',
 					'description' => $value->description,
 					'status_id' => $value->status,
@@ -270,6 +273,7 @@ class ReportController extends Controller
 					'handler_name' => @$value->getTakenBy->name,
 					'lat' => $value->lat,
 					'long' => $value->long,
+					'location' => $value->location,
 					'photo' => URL::to('/') . ($value->photo) ? URL::to('/') . '/reports/' . $value->photo : '',
 					'description' => $value->description,
 					'status_id' => $value->status,
@@ -332,6 +336,7 @@ class ReportController extends Controller
 					'handler_name' => @$value->getTakenBy->name,
 					'lat' => $value->lat,
 					'long' => $value->long,
+					'location' => $value->location,
 					'photo' => URL::to('/') . ($value->photo) ? URL::to('/') . '/reports/' . $value->photo : '',
 					'description' => $value->description,
 					'status_id' => $value->status,
@@ -369,6 +374,7 @@ class ReportController extends Controller
      *                @OA\Property(property="reported_by", type="string"),
      *                @OA\Property(property="lat", type="string"),
      *                @OA\Property(property="long", type="string"),
+     *                @OA\Property(property="location", type="string"),
      *                @OA\Property(property="description", type="string"),
      *                @OA\Property(property="status", type="integer"),
      *                @OA\Property(property="photo", type="string"),
@@ -418,6 +424,7 @@ class ReportController extends Controller
 			$report->reported_by = $request->reported_by;
 			$report->lat = $request->lat;
 			$report->long = $request->long;
+			$report->location = $request->location;
 			$report->description = $request->description;
 			$report->status = 1; // PROSES
 
@@ -482,6 +489,7 @@ class ReportController extends Controller
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
 				'long' => $report->long,
+				'location' => $report->location,
 				'photo' => ($report->photo) ? URL::to('/') . '/reports/' . $report->photo : '',
 				'description' => $report->description,
 				'status_id' => $report->status,
@@ -555,6 +563,7 @@ class ReportController extends Controller
 
         $validator = Validator::make($request->all(), [
             'cat_id' => 'required',
+            'location' => 'required|string',
             'description' => 'required|string',
             'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
@@ -596,6 +605,7 @@ class ReportController extends Controller
 				$report->long = $request->long;
 			}
 
+			$report->location = $request->location;
 			$report->description = $request->description;
 
             if ($request->file('photo')) {
@@ -618,6 +628,7 @@ class ReportController extends Controller
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
 				'long' => $report->long,
+				'long' => $report->location,
 				'photo' => URL::to('/') . ($report->photo) ? URL::to('/') . '/reports/' . $report->photo : '',
 				'description' => $report->description,
 				'status_id' => $report->status,
@@ -731,6 +742,7 @@ class ReportController extends Controller
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
 				'long' => $report->long,
+				'location' => $report->c,
 				'photo' => URL::to('/') . ($report->photo) ? URL::to('/') . '/reports/' . $report->photo : '',
 				'description' => $report->description,
 				'status_id' => $report->status,
