@@ -21,6 +21,7 @@ use App\Models\FcmToken;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\RefReportStatus;
+use App\Models\LogNotification;
 
 use Exception;
 use ErrorException;
@@ -82,13 +83,20 @@ class FirebaseService
 	        $returnValue = [
 	        	'success' => true,
 	        	'message' => 'success'
-	        ];
+	        ];			
 		} catch (Exception $ex) {
 	        $returnValue = [
 	        	'success' => false,
 	        	'message' => $ex->getMessage()
 	        ];
 		}
+
+		// save to log notification
+		LogNotification::create([
+			'code' => $code,
+			'status' => $returnValue['success'],
+			'message' => $returnValue['message']
+		]);
 
 		return $returnValue;
 	}
@@ -171,6 +179,13 @@ class FirebaseService
 	        	'message' => $ex->getMessage()
 	        ];
 		}
+
+		// save to log notification
+		LogNotification::create([
+			'code' => $code,
+			'status' => $returnValue['success'],
+			'message' => $returnValue['message']
+		]);
 
 		return $returnValue;
 	}

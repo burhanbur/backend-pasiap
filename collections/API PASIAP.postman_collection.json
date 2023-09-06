@@ -567,6 +567,11 @@
 									"key": "photo",
 									"type": "file",
 									"src": "/C:/Users/Giga/Pictures/222222.png"
+								},
+								{
+									"key": "location",
+									"value": "Jl Ngarai No 5",
+									"type": "text"
 								}
 							]
 						},
@@ -609,6 +614,11 @@
 								{
 									"key": "cat_id",
 									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "Jl Ngarai No 6",
 									"type": "text"
 								}
 							]
@@ -748,12 +758,12 @@
 							"formdata": [
 								{
 									"key": "question",
-									"value": "halo",
+									"value": "Apa itu PALUTA SIGAP?",
 									"type": "text"
 								},
 								{
 									"key": "answer",
-									"value": "oi manglu",
+									"value": "Sebuah sistem yang memudahkan warga khususnya Padang Lawas Utara (Paluta) untuk menyampaikan keluhan hanya dalam genggaman smartphone saja.",
 									"type": "text"
 								}
 							]
