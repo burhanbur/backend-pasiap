@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost/pasiap/public/api",
+            "url": "",
             "description": "Demo API Server"
         }
     ],
@@ -288,12 +288,7 @@
                     "200": {
                         "description": "Success"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -323,12 +318,7 @@
                     "200": {
                         "description": "Success"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         },
         "/faq/{id}": {
@@ -353,12 +343,21 @@
                     "200": {
                         "description": "Success"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
+                }
+            }
+        },
+        "/apps": {
+            "get": {
+                "tags": [
+                    "Apps"
+                ],
+                "description": "Get application info",
+                "operationId": "getApp",
+                "responses": {
+                    "200": {
+                        "description": "Success"
                     }
-                ]
+                }
             }
         },
         "/reports": {
