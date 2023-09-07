@@ -41,7 +41,11 @@ class FirebaseService
 	            where mhr.role_id = ?
 	        ";
 
-	        $tokens = DB::select($sql, [5]); // petugas
+	        $query = DB::select($sql, [5]); // petugas
+
+	        $tokens = collect($query)->map(function ($item) {
+	        	return (array) $item;
+	        });
 
 	        $serverKey = env('FIREBASE_KEY');
 	  
@@ -73,6 +77,9 @@ class FirebaseService
 	        curl_setopt($ch, CURLOPT_POSTFIELDS, $encodedData);
 
 	        $result = curl_exec($ch);
+
+	        var_dump($result);
+	        die();
 
 	        if ($result === FALSE) {
 	            throw new Exception(curl_error($ch), 1);                
@@ -115,7 +122,11 @@ class FirebaseService
 	            where usr.id = ?
 	        ";
 
-	        $tokens = DB::select($sql, [$reported_by]);
+	        $query = DB::select($sql, [$reported_by]);
+
+	        $tokens = collect($query)->map(function ($item) {
+	        	return (array) $item;
+	        });
 
 	        $serverKey = env('FIREBASE_KEY');
 

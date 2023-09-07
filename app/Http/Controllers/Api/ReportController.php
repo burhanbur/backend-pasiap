@@ -475,7 +475,7 @@ class ReportController extends Controller
 
             // send push notification
             $service = new FirebaseService;
-            $service->sendNotificationToOfficer($report->code);
+            $service->sendNotificationToOfficer($a->code);
             $service->sendNotificationReportStatus($request->reported_by, $report->status);
 
 			$data = [
