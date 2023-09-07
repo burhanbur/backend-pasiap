@@ -78,9 +78,6 @@ class FirebaseService
 
 	        $result = curl_exec($ch);
 
-	        var_dump($result);
-	        die();
-
 	        if ($result === FALSE) {
 	            throw new Exception(curl_error($ch), 1);                
 	        }
