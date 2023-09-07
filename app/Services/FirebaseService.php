@@ -31,6 +31,7 @@ class FirebaseService
 	public function sendNotificationToOfficer($code = null)
 	{
 		$returnValue = [];
+		$tokens = [];
 
 		try {
 			$url = 'https://fcm.googleapis.com/fcm/send';
@@ -43,9 +44,9 @@ class FirebaseService
 
 	        $query = DB::select($sql, [5]); // petugas
 
-	        $tokens = collect($query)->map(function ($item) {
-	        	return (array) $item;
-	        });
+	        foreach ($query as $key => $value) {
+	        	$tokens[] = $value->token;
+	        }
 
 	        $serverKey = env('FIREBASE_KEY');
 	  
@@ -121,9 +122,9 @@ class FirebaseService
 
 	        $query = DB::select($sql, [$reported_by]);
 
-	        $tokens = collect($query)->map(function ($item) {
-	        	return (array) $item;
-	        });
+	        foreach ($query as $key => $value) {
+	        	$tokens[] = $value->token;
+	        }
 
 	        $serverKey = env('FIREBASE_KEY');
 
