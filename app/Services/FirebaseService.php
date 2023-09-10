@@ -17,6 +17,7 @@ use Illuminate\Database\QueryException;
 
 use App\Utilities\Response;
 
+use App\Models\Category;
 use App\Models\FcmToken;
 use App\Models\Profile;
 use App\Models\User;
@@ -28,12 +29,14 @@ use ErrorException;
 
 class FirebaseService
 {
-	public function sendNotificationToOfficer($code = null)
+	public function sendNotificationToOfficer($code = null, $catId = null)
 	{
 		$returnValue = [];
 		$tokens = [];
 
 		try {
+			$category = Category::find($catId);
+
 			$url = 'https://fcm.googleapis.com/fcm/send';
 	        $sql = "
 	            select ft.token from fcm_tokens as ft 
@@ -53,8 +56,8 @@ class FirebaseService
 	        $data = [
 	            "registration_ids" => $tokens,
 	            "notification" => [
-	                "title" => 'Pemberitahuan Kebakaran',
-	                "body" => 'Ada laporan kebakaran di dekat lokasi Anda dengan kode ' . $code . '. Segera lakukan tindakan pencegahan!',
+	                "title" => 'Pemberitahuan ' . @$category->name,
+	                "body" => 'Ada laporan ' . @$category->name . ' di dekat lokasi Anda dengan kode ' . $code . '. Segera lakukan tindakan pencegahan!',
 	            ]
 	        ];
 
@@ -142,14 +145,14 @@ class FirebaseService
 	        		break;
 	        	
 	        	default:
-	        		$message = 'Tim pemadam kebakaran telah tiba di lokasi. Mohon tetap tenang dan mengikuti petunjuk petugas.';
+	        		$message = 'Tim telah tiba di lokasi. Mohon tetap tenang dan mengikuti petunjuk petugas.';
 	        		break;
 	        }
 	  
 	        $data = [
 	            "registration_ids" => $tokens,
 	            "notification" => [
-	                "title" => 'Status Penanganan Kebakaran',
+	                "title" => 'Status Penanganan Laporan',
 	                "body" => $message,
 	            ]
 	        ];
