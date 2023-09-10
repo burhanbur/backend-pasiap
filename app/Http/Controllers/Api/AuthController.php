@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
-use App\Mails\VerifyMail;
+use App\Mail\VerifyMail;
+use App\Mail\ChangePassword;
 
 use App\Models\User;
 use App\Models\Profile;
@@ -398,7 +399,7 @@ class AuthController extends Controller
      *    path="/password",
      *    operationId="changePassword",
      *    tags={"Authentications"},
-     *    description="Update password user account",
+     *    description="Change password request to user email",
      *    security={{"bearerAuth": {}}},
      *    @OA\RequestBody(
      *        required=true,
@@ -437,13 +438,83 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         try {
+            $encrypted = [];
             $token = JWTAuth::getToken();
             $payload = JWTAuth::getPayload($token)->toArray();
 
-            $id = $payload['sub'];
+            $user = User::find($payload['sub']);
 
-            $user = User::find($id);
-            $user->password = Hash::make($request->password);
+            $data = [
+                'id' => $user->id,
+                'password' => Hash::make($request->password),
+                'exp' => date('Y-m-d H:i:s', strtotime('+1 hour'))
+            ];
+
+            $encrypted = encrypt($data);
+
+            $response = new \stdClass;
+            $response->token = $encrypted;
+
+            // send email
+            $dataEmail = [
+                'user_id' => $user->id,
+                'url' => route('update.password', $encrypted),
+            ];
+
+            // send mail verifikasi user
+            $mail = new ChangePassword($dataEmail);
+            Mail::to($user->email)->send($mail);
+
+            $code = 200;
+            $returnValue = [
+                'success' => true,
+                'data' => $response,
+                'url' => $this->endpoint()
+            ];
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+
+        return response()->json($returnValue, $code);
+    }
+
+    /**
+     * @OA\Get(
+     *    path="/password",
+     *    operationId="updatePassword",
+     *    tags={"Authentications"},
+     *    description="Validation update password user account from URL email",
+     *    @OA\Response(
+     *        response=200,
+     *        description="Success",
+     *    )
+     * )
+     */
+    public function updatePassword(Request $request, $encrypted)
+    {
+        $returnValue = [];
+
+        DB::beginTransaction();
+
+        try {
+            $now = date('Y-m-d H:i:s');
+            $decrypt = decrypt($encrypted);
+
+            if ($now > $decrypt['exp']) {
+                throw new Exception("The change password link has expired, please create a new password change request ", 401);
+            }
+
+            $user = User::find($decrypt['id']);
+            $user->password = $decrypt['password'];
             $user->save();
 
             $code = 200;

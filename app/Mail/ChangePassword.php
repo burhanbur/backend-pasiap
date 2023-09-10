@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Mails;
+namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyMail extends Mailable
+class ChangePassword extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,14 +28,8 @@ class VerifyMail extends Mailable
      */
     public function build()
     {
-        $this->withSwiftMessage(function ($message) {
-            $message->className = self::class;
-            $message->userId = $this->data['user_id'];
-        });
-
-        return $this->markdown('emails.user-verify', [
+        return $this->markdown('emails.change-password', [
             'url' => $this->data['url'],
-            'name' => $this->data['name'],
         ]);
     }
 }
