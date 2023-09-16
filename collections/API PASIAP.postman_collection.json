@@ -7,6 +7,125 @@
 	},
 	"item": [
 		{
+			"name": "Articles",
+			"item": [
+				{
+					"name": "get all articles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/articles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get detail articles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/articles/testing-awikwok",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"articles",
+								"testing-awikwok"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create article",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{base_url}}/articles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update article",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{base_url}}/articles/testing-awikwok",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"articles",
+								"testing-awikwok"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete article",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{activeToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/articles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"articles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Authentication",
 			"item": [
 				{
@@ -22,7 +141,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"tnugraha\",\r\n    \"password\": \"user123\"\r\n}"
+							"raw": "{\r\n    \"username\": \"bmafazi\",\r\n    \"password\": \"admin123\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/login",
@@ -54,7 +173,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"user123\",\r\n    \"password_confirmation\": \"tnugraha\"\r\n}"
+							"raw": "{\r\n    \"password\": \"user123\",\r\n    \"password_confirmation\": \"user123\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/password",
@@ -838,6 +957,42 @@
 							],
 							"path": [
 								"tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://fcm.googleapis.com/fcm/send",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "key=AAAAfKAHWRk:APA91bE5Rd3FlBL0Zrw79x9dkXH9J08T1qiT38shsIgeqGfeZGH_q1xiKOsrNfymmr3KbU-dvkhKUlhFB2mKzux1uopkDfwdQok8FAXc_jDPLuw1Wz7aKKlBayctrQiYxGXBRg44wLoC",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"registration_ids\": [\r\n        \"fHOGAEyEQQOIR7WAaRDw6s:APA91bENlqWRGstML-dsTSt4ZCxzfDGEltLHFTYGYGM95RzeikGivLFAcjYWu0jj_d7Z9aL0-VgW2uQP6Hasu5XesJTtkrHNNUyO7Z4Q8KjVw53IDelL9SIth7TRSpOaWNhcqSFL-QSM\"\r\n    ],\r\n    \"notification\":{\r\n        \"title\":\"Pemberitahuan Kebakaran\",\r\n        \"body\":\"Ada laporan kebakaran di dekat lokasi Anda dengan kode . Segera lakukan tindakan pencegahan!\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://fcm.googleapis.com/fcm/send",
+							"protocol": "https",
+							"host": [
+								"fcm",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"fcm",
+								"send"
 							]
 						}
 					},

@@ -126,6 +126,35 @@ class FaqController extends Controller
         return response()->json($returnValue, $code);
     }
 
+    /**
+     * @OA\Put(
+     *    path="/faq/{id}",
+     *    operationId="updateFaq",
+     *    tags={"Faq"},
+     *    description="Update faq by ID",
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        @OA\Schema(type="integer"),
+     *        description="ID of the data to delete",
+     *    ),
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="question", type="string"),
+     *                @OA\Property(property="answer", type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200, 
+     *        description="Success",
+     *    )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $returnValue = [];

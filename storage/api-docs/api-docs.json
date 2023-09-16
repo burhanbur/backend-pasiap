@@ -10,11 +10,154 @@
     },
     "servers": [
         {
-            "url": "",
+            "url": "http://localhost/pasiap/public/api",
             "description": "Demo API Server"
         }
     ],
     "paths": {
+        "/articles": {
+            "get": {
+                "tags": [
+                    "Article"
+                ],
+                "description": "Get all data articles",
+                "operationId": "getAllArticles",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Article"
+                ],
+                "description": "Create new article",
+                "operationId": "storeArticle",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "cover": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "is_publish": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/articles/{id}": {
+            "put": {
+                "tags": [
+                    "Article"
+                ],
+                "description": "Update article by ID",
+                "operationId": "updateArticle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the data to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "cover": {
+                                        "type": "string"
+                                    },
+                                    "is_publish": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Article"
+                ],
+                "description": "Delete article by ID",
+                "operationId": "deleteArticle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the data to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/login": {
             "post": {
                 "tags": [
@@ -166,11 +309,23 @@
             }
         },
         "/password": {
+            "get": {
+                "tags": [
+                    "Authentications"
+                ],
+                "description": "Validation update password user account from URL email",
+                "operationId": "updatePassword",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Authentications"
                 ],
-                "description": "Update password user account",
+                "description": "Change password request to user email",
                 "operationId": "changePassword",
                 "requestBody": {
                     "required": true,
@@ -322,6 +477,47 @@
             }
         },
         "/faq/{id}": {
+            "put": {
+                "tags": [
+                    "Faq"
+                ],
+                "description": "Update faq by ID",
+                "operationId": "updateFaq",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the data to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "question": {
+                                        "type": "string"
+                                    },
+                                    "answer": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "Faq"
@@ -400,6 +596,9 @@
                                         "type": "string"
                                     },
                                     "long": {
+                                        "type": "string"
+                                    },
+                                    "location": {
                                         "type": "string"
                                     },
                                     "description": {

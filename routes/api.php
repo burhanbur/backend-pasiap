@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DropdownController;
@@ -47,6 +48,12 @@ Route::group(['prefix' => 'dropdown'], function () {
     Route::get('marital_status', [DropdownController::class, 'getAllMaritalStatus']);
 });
 
+// articles
+Route::group(['prefix' => 'articles'], function () {
+    Route::get('/', [ArticleController::class, 'index']);
+    Route::get('/{slug}', [ArticleController::class, 'show']);
+});
+
 Route::group([ 
     'middleware' => [
         'auth.jwt',
@@ -62,6 +69,13 @@ Route::group([
     // profiles
     Route::get('profiles', [UserController::class, 'getProfile']);
     Route::post('profiles', [UserController::class, 'updateProfile']);
+
+    // articles
+    Route::group(['prefix' => 'articles'], function () {
+        Route::post('/', [ArticleController::class, 'store']);
+        Route::put('/{id}', [ArticleController::class, 'update']);
+        Route::delete('/{id}', [ArticleController::class, 'delete']);
+    });
 
     // reports
     Route::get('reports', [ReportController::class, 'getReports']);
