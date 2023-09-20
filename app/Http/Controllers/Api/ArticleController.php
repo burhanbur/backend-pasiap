@@ -29,6 +29,16 @@ class ArticleController extends Controller
 
     protected $path = 'assets/';
 
+    private function dateTimeConvert($date)
+    {
+        return date('Y-m-d H:i:s', strtotime($date));
+    }
+
+    private function dateConvert($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
+
     /**
      * @OA\Get(
      *    path="/articles",
@@ -56,15 +66,15 @@ class ArticleController extends Controller
                     'slug' => $value->slug,
                     'title' => $value->title,
                     'description' => $value->description,
-                    'cover' => public_path('articles') . '/' . $value->cover,
+                    'cover' => URL::to('/') . ($value->cover) ? URL::to('/') . '/articles/' . $value->cover : '',
                     'category' => $value->category,
                     'is_publish' => $value->is_publish,
                     'author_id' => $value->author,
                     'author_name' => $value->getAuthor->name,
                     'updated_by' => $value->updated_by,
                     'updated_name' => $value->getUpdatedBy->name,
-                    'created_at' =>$value->created_at,
-                    'updated_at' =>$value->updated_at
+                    'created_at' => $this->dateTimeConvert($value->created_at),
+                    'updated_at' => $this->dateTimeConvert($value->updated_at)
                 ];
             }
 
@@ -117,15 +127,15 @@ class ArticleController extends Controller
             $collection->slug = $data->slug;
             $collection->title = $data->title;
             $collection->description = $data->description;
-            $collection->cover = public_path('articles') . '/' . $data->cover;
+            $collection->cover = URL::to('/') . ($data->cover) ? URL::to('/') . '/articles/' . $data->cover : '';
             $collection->category = $data->category;
             $collection->is_publish = $data->is_publish;
             $collection->author_id = $data->author;
             $collection->author_name = $data->getAuthor->name;
             $collection->updated_by = $data->updated_by;
             $collection->updated_name = $data->getUpdatedBy->name;
-            $collection->created_at = $data->created_at;
-            $collection->updated_at = $data->updated_at;
+            $collection->created_at = $this->dateTimeConvert($data->created_at);
+            $collection->updated_at = $this->dateTimeConvert($data->updated_at);
 
             $code = 200;
             $returnValue = [

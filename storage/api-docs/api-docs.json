@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost/pasiap/public/api",
+            "url": "https://pasiap.cloud/api",
             "description": "Demo API Server"
         }
     ],
@@ -71,6 +71,31 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/articles/{slug}": {
+            "get": {
+                "tags": [
+                    "Article"
+                ],
+                "description": "Get detail article by slug",
+                "operationId": "getArticleBySlug",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug data to show article",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
             }
         },
         "/articles/{id}": {
