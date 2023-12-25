@@ -36,7 +36,7 @@ class UsersTableSeeder extends Seeder
 
             Profile::create([
                 'user_id' => $admin->id,
-                'sid' => '1234567890123457s',
+                'sid' => '1234567890123457',
                 'full_name' => $admin->name,
                 'email' => $admin->email,
                 'phone' => '085695682973'
