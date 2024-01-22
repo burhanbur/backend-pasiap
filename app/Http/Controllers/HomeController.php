@@ -28,6 +28,11 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function policy()
+    {
+        return view('privacy-policy', get_defined_vars());
+    }
+
     public function verified(Request $request)
     {
         $data = [];
