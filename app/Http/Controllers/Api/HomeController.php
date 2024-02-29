@@ -54,16 +54,19 @@ class HomeController extends Controller
 			$data->contact_person = [
 				[
 					'id' => '1',
+					'code' => 'telp',
 					'name' => 'Kontak Organisasi',
 					'contact' => '06355110003'
 				],
 				[
 					'id' => '2',
+					'code' => 'email',
 					'name' => 'Kontak Email',
 					'contact' => 'pasiappaluta@gmail.com'
 				],
 				[
 					'id' => '3',
+					'code' => 'whatsapp',
 					'name' => 'Kontak WhatsApp',
 					'contact' => '082272508096'
 				],
