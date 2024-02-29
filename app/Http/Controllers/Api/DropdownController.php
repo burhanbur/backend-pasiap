@@ -50,10 +50,11 @@ class DropdownController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
-            ];            
+            ];
         } catch (Exception $ex) {
             return $this->error($ex);
         }
@@ -83,10 +84,11 @@ class DropdownController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
-            ];            
+            ];
         } catch (Exception $ex) {
             return $this->error($ex);
         }
@@ -114,8 +116,9 @@ class DropdownController extends Controller
 
         $code = 200;
         $returnValue = [
-            'success' => true, 
+            'success' => true,
             'data' => $data,
+            'datetime' => now(),
             'url' => $this->endpoint()
         ];
 
@@ -144,8 +147,9 @@ class DropdownController extends Controller
 
         $code = 200;
         $returnValue = [
-            'success' => true, 
+            'success' => true,
             'data' => $data,
+            'datetime' => now(),
             'url' => $this->endpoint()
         ];
 

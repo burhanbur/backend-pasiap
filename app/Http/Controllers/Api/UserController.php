@@ -80,10 +80,11 @@ class UserController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
-            ];            
+            ];
         } catch (Exception $ex) {
             return $this->error($ex);
         }
@@ -138,10 +139,11 @@ class UserController extends Controller
             // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -158,16 +160,17 @@ class UserController extends Controller
 
             // check log profile
             $log = LogProfile::where('user_id', $id)
-            ->where('column', 'name')
-            ->whereMonth('created_at', date('m'))
-            ->whereYear('created_at', date('Y'))
-            ->exists();
+                ->where('column', 'name')
+                ->whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->exists();
 
             if ($log) {
                 $code = 400;
                 $returnValue = [
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'Cannot update your name in this month',
+                    'datetime' => now(),
                     'url' => $this->endpoint()
                 ];
 
@@ -209,8 +212,8 @@ class UserController extends Controller
                 finfo_close($finfo);
 
                 $format = [
-                    'image/jpg' => 'jpg', 
-                    'image/jpeg' => 'jpeg', 
+                    'image/jpg' => 'jpg',
+                    'image/jpeg' => 'jpeg',
                     'image/png' => 'png'
                 ];
 
@@ -243,8 +246,8 @@ class UserController extends Controller
                 finfo_close($finfo);
 
                 $format = [
-                    'image/jpg' => 'jpg', 
-                    'image/jpeg' => 'jpeg', 
+                    'image/jpg' => 'jpg',
+                    'image/jpeg' => 'jpeg',
                     'image/png' => 'png'
                 ];
 
@@ -285,8 +288,9 @@ class UserController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -336,10 +340,11 @@ class UserController extends Controller
             'token' => 'required|string',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -361,11 +366,11 @@ class UserController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
-
         } catch (Exception $ex) {
             DB::rollback();
             return $this->error($ex);
@@ -376,7 +381,7 @@ class UserController extends Controller
             DB::rollback();
             return $this->error($ex);
         }
-        
+
         return response()->json($returnValue, $code);
     }
 }

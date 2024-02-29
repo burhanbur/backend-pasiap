@@ -31,22 +31,22 @@ class HomeController extends Controller
 {
 	use Response;
 
-    /**
-     * @OA\Get(
-     *    path="/apps",
-     *    operationId="getApp",
-     *    tags={"Apps"},
-     *    description="Get application info",
-     *    @OA\Response(
-     *        response=200,
-     *        description="Success",
-     *    )
-     * )
-     */
+	/**
+	 * @OA\Get(
+	 *    path="/apps",
+	 *    operationId="getApp",
+	 *    tags={"Apps"},
+	 *    description="Get application info",
+	 *    @OA\Response(
+	 *        response=200,
+	 *        description="Success",
+	 *    )
+	 * )
+	 */
 	public function app(Request $request)
 	{
-    	$returnValue = [];
-    	$code = 400;
+		$returnValue = [];
+		$code = 400;
 
 		try {
 			$data = new \stdClass();
@@ -62,15 +62,21 @@ class HomeController extends Controller
 					'name' => 'Kontak Email',
 					'contact' => 'pasiappaluta@gmail.com'
 				],
+				[
+					'id' => '3',
+					'name' => 'Kontak WhatsApp',
+					'contact' => '082272508096'
+				],
 			];
 			$data->version = 'PASIAP V.01';
 
-	        $code = 200;
-	        $returnValue = [
-	            'success' => true, 
-	            'data' => $data,
-	            'url' => $this->endpoint()
-	        ];
+			$code = 200;
+			$returnValue = [
+				'success' => true,
+				'data' => $data,
+				'datetime' => now(),
+				'url' => $this->endpoint()
+			];
 		} catch (Exception $ex) {
 			return $this->error($ex);
 		}

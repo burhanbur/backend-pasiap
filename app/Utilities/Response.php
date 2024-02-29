@@ -32,6 +32,7 @@ trait Response
 		$returnValue = [
 			'success' => false,
 			'message' => 'Invalid credentials',
+			'datetime' => now(),
 			'url' => $this->endpoint()
 		];
 
@@ -44,6 +45,7 @@ trait Response
 		$returnValue = [
 			'success' => false,
 			'message' => 'Please verify your email first',
+			'datetime' => now(),
 			'url' => $this->endpoint()
 		];
 
@@ -56,6 +58,7 @@ trait Response
 		$returnValue = [
 			'success' => false,
 			'message' => 'Data not found',
+			'datetime' => now(),
 			'url' => $this->endpoint()
 		];
 
@@ -68,6 +71,7 @@ trait Response
 		$returnValue = [
 			'success' => false,
 			'message' => $this->errMessage($ex),
+			'datetime' => now(),
 			'url' => $this->endpoint()
 		];
 

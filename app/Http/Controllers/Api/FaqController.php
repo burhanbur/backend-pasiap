@@ -49,10 +49,11 @@ class FaqController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
-            ];            
+            ];
         } catch (Exception $ex) {
             return $this->error($ex);
         }
@@ -92,10 +93,11 @@ class FaqController extends Controller
             'answer' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -112,8 +114,9 @@ class FaqController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -165,10 +168,11 @@ class FaqController extends Controller
             'answer' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -190,8 +194,9 @@ class FaqController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -241,8 +246,9 @@ class FaqController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 

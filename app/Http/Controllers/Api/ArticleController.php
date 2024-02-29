@@ -81,10 +81,11 @@ class ArticleController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $collection,
+                'datetime' => now(),
                 'url' => $this->endpoint()
-            ];            
+            ];
         } catch (Exception $ex) {
             return $this->error($ex);
         }
@@ -140,10 +141,11 @@ class ArticleController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $collection,
+                'datetime' => now(),
                 'url' => $this->endpoint()
-            ];            
+            ];
         } catch (Exception $ex) {
             return $this->error($ex);
         }
@@ -188,10 +190,11 @@ class ArticleController extends Controller
             'category' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -265,8 +268,9 @@ class ArticleController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -323,10 +327,11 @@ class ArticleController extends Controller
             'category' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -385,8 +390,9 @@ class ArticleController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -438,8 +444,9 @@ class ArticleController extends Controller
 
             $code = 200;
             $returnValue = [
-                'success' => true, 
+                'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 

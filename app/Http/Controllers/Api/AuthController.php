@@ -73,6 +73,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -109,6 +110,7 @@ class AuthController extends Controller
                 $returnValue = [
                     'success' => true,
                     'token' => $token,
+                    'datetime' => now(),
                     'url' => $this->endpoint()
                 ];
             }
@@ -185,6 +187,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -331,6 +334,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => true,
                 'data' => $data,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
         } catch (Exception $ex) {
@@ -383,6 +387,7 @@ class AuthController extends Controller
             $returnValue = array(
                 'success' => true,
                 'token' => $refreshed,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             );
         } catch (JWTException $ex) {
@@ -433,6 +438,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -473,6 +479,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => true,
                 'data' => $response,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -525,6 +532,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => true,
                 'data' => $user,
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
@@ -555,6 +563,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => true,
                 'message' => 'You have logged out',
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
         } catch (JWTException $ex) {
@@ -579,6 +588,7 @@ class AuthController extends Controller
             $returnValue = [
                 'success' => false,
                 'message' => 'User not found',
+                'datetime' => now(),
                 'url' => $this->endpoint()
             ];
 
