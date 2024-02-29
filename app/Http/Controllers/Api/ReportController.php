@@ -408,7 +408,7 @@ class ReportController extends Controller
 			'reported_by' => 'required',
 			'description' => 'required|string',
 			'photo' => ['required_if: cat_id,2,3'],
-			// 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+			// 'photo' => 'file|mimes:jpeg,jpg,png|max:3072',
 		]);
 
 		if ($validator->fails()) {
@@ -425,6 +425,8 @@ class ReportController extends Controller
 		DB::beginTransaction();
 
 		try {
+			$user = auth()->user();
+
 			$report = new Report;
 			$report->cat_id = $request->cat_id;
 			$report->reported_by = $request->reported_by;
@@ -459,8 +461,8 @@ class ReportController extends Controller
 
 				$image_size = strlen($image);
 
-				if ($image_size > 2097152) {
-					throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+				if ($image_size > (3 * 1024 * 1024)) {
+					throw new Exception("The photo must not be greater than 3072 kilobytes.", 400);
 				}
 
 				$file_path = public_path('reports') . '/' . $file_image;
@@ -491,6 +493,7 @@ class ReportController extends Controller
 				'category_name' => $report->getCategory->name,
 				'reporter_id' => $report->reported_by,
 				'reporter_name' => $report->getReportedBy->name,
+				'reporter_role_id' => @$user->roles()->first()->id,
 				'handler_id' => $report->taken_by,
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
@@ -572,7 +575,7 @@ class ReportController extends Controller
 			'cat_id' => 'required',
 			'location' => 'required|string',
 			'description' => 'required|string',
-			'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
+			// 'photo' => 'file|mimes:jpeg,jpg,png|max:3072',
 		]);
 
 		if ($validator->fails()) {
@@ -589,6 +592,8 @@ class ReportController extends Controller
 		DB::beginTransaction();
 
 		try {
+			$user = auth()->user();
+
 			$report = Report::find($id);
 
 			if (!$report) {
@@ -617,10 +622,43 @@ class ReportController extends Controller
 			$report->location = $request->location;
 			$report->description = $request->description;
 
-			if ($request->file('photo')) {
+			/* if ($request->file('photo')) {
 				$image = $request->file('photo');
 				$file_image = str_replace(' ', '_', strtotime(date('Y-m-d H:i:s')) . '_' . $image->getClientOriginalName());
 				$image->move('reports', $file_image);
+				$report->photo = $file_image;
+			} */
+			if ($request->photo) {
+				$image = base64_decode($request->photo);
+
+				$file_image = str_replace(' ', '_', strtotime(date('Y-m-d H:i:s')));
+
+				$finfo = finfo_open();
+				$mimeType = finfo_buffer($finfo, $image, FILEINFO_MIME_TYPE);
+				finfo_close($finfo);
+
+				$format = [
+					'image/jpg' => 'jpg',
+					'image/jpeg' => 'jpeg',
+					'image/png' => 'png'
+				];
+
+				if (isset($format[$mimeType])) {
+					$extension = $format[$mimeType];
+				} else {
+					throw new Exception("The photo must be a file of type: jpeg, jpg, png.", 400);
+				}
+
+				$file_image .= '.' . $extension;
+
+				$image_size = strlen($image);
+
+				if ($image_size > (3 * 1024 * 1024)) {
+					throw new Exception("The photo must not be greater than 3072 kilobytes.", 400);
+				}
+
+				$file_path = public_path('reports') . '/' . $file_image;
+				file_put_contents($file_path, $image);
 				$report->photo = $file_image;
 			}
 
@@ -633,6 +671,7 @@ class ReportController extends Controller
 				'category_name' => $report->getCategory->name,
 				'reporter_id' => $report->reported_by,
 				'reporter_name' => $report->getReportedBy->name,
+				'reporter_role_id' => @$user->roles()->first()->id,
 				'handler_id' => $report->taken_by,
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
@@ -722,6 +761,8 @@ class ReportController extends Controller
 		DB::beginTransaction();
 
 		try {
+			$user = auth()->user();
+
 			$report = Report::find($id);
 
 			if (!$report) {
@@ -749,6 +790,7 @@ class ReportController extends Controller
 				'category_name' => $report->getCategory->name,
 				'reporter_id' => $report->reported_by,
 				'reporter_name' => $report->getReportedBy->name,
+				'reporter_role_id' => @$user->roles()->first()->id,
 				'handler_id' => $report->taken_by,
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,

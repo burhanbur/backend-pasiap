@@ -227,8 +227,8 @@ class UserController extends Controller
 
                 $image_size = strlen($image);
 
-                if ($image_size > 2097152) {
-                    throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+                if ($image_size > (3 * 1024 * 1024)) {
+                    throw new Exception("The photo must not be greater than 3072 kilobytes.", 400);
                 }
 
                 $file_path = public_path('assets') . '/identity_card_photo/' . $file_image;
@@ -261,8 +261,8 @@ class UserController extends Controller
 
                 $image_size = strlen($image);
 
-                if ($image_size > 2097152) {
-                    throw new Exception("The photo must not be greater than 2048 kilobytes.", 400);
+                if ($image_size > (3 * 1024 * 1024)) {
+                    throw new Exception("The photo must not be greater than 3072 kilobytes.", 400);
                 }
 
                 $file_path = public_path('assets') . '/photo/' . $file_photo;
