@@ -174,7 +174,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed',
             'phone' => 'required|string',
-            'sid' => 'required|string|size:16|unique:users',
+            'sid' => 'required|string|size:16',
             // 'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
             'identity_card_photo' => 'string',
             // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
@@ -194,7 +194,7 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         try {
-            if (User::where('sid', $request->sid)->exists()) {
+            if (Profile::where('sid', $request->sid)->exists()) {
                 throw new Exception('Data NIK telah terdaftar', 1);
             }
 
