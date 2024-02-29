@@ -62,26 +62,26 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-    	$returnValue = [];
+        $returnValue = [];
 
-    	$validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
         if ($validator->fails()) {
-        	$returnValue = [
-        		'success' => false,
-        		'message' => $validator->errors(),
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
                 'url' => $this->endpoint()
-        	];
+            ];
 
             return response()->json($returnValue, 400);
         }
 
-    	$credentials = $request->only('username', 'password');
+        $credentials = $request->only('username', 'password');
 
-    	try {
+        try {
             $user = User::where('username', $credentials['username'])->first();
 
             if (!$user) {
@@ -102,19 +102,19 @@ class AuthController extends Controller
 
             $token = JWTAuth::claims($customClaims)->attempt($credentials);
 
-	        if (!$token) {
+            if (!$token) {
                 return $this->unauthorized();
-	        } else {
-		        $code = 200;
-	        	$returnValue = [
-		        	'success' => true,
-		        	'token' => $token,
+            } else {
+                $code = 200;
+                $returnValue = [
+                    'success' => true,
+                    'token' => $token,
                     'url' => $this->endpoint()
-		        ];
-	        }
-    	} catch (JWTException $ex) {
-	        return $this->error($ex);
-    	} catch (QueryException $ex) {
+                ];
+            }
+        } catch (JWTException $ex) {
+            return $this->error($ex);
+        } catch (QueryException $ex) {
             return $this->error($ex);
         } catch (ErrorException $ex) {
             return $this->error($ex);
@@ -159,7 +159,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-    	$returnValue = [];
+        $returnValue = [];
 
         $path = 'assets/';
         $folderPath = public_path('assets');
@@ -174,19 +174,19 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed',
             'phone' => 'required|string',
-            'sid' => 'required|string|size:16',
+            'sid' => 'required|string|size:16|unique:users',
             // 'identity_card_photo' => 'file|mimes:jpeg,jpg,png|max:2048',
             'identity_card_photo' => 'string',
             // 'photo' => 'file|mimes:jpeg,jpg,png|max:2048',
             'photo' => 'string',
         ]);
 
-        if($validator->fails()){
-        	$returnValue = [
-        		'success' => false,
-        		'message' => $validator->errors(),
+        if ($validator->fails()) {
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
                 'url' => $this->endpoint()
-        	];
+            ];
 
             return response()->json($returnValue, 400);
         }
@@ -194,12 +194,16 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         try {
-	        $user = User::create([
-	        	'name' => $request->name,
+            if (User::where('sid', $request->sid)->exists()) {
+                throw new Exception('Data NIK telah terdaftar', 1);
+            }
+
+            $user = User::create([
+                'name' => $request->name,
                 'username' => $request->username,
-	        	'email' => $request->email,
-	        	'password' => Hash::make($request->password)
-	        ]);
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
 
             $user->assignRole('user');
 
@@ -331,7 +335,7 @@ class AuthController extends Controller
             ];
         } catch (Exception $ex) {
             DB::rollback();
-	        return $this->error($ex);
+            return $this->error($ex);
         } catch (QueryException $ex) {
             DB::rollback();
             return $this->error($ex);
@@ -366,7 +370,7 @@ class AuthController extends Controller
      */
     public function refreshToken(Request $request)
     {
-    	$returnValue = [];
+        $returnValue = [];
 
         try {
             if (!JWTAuth::getToken()) {
@@ -425,7 +429,7 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             $returnValue = [
                 'success' => false,
                 'message' => $validator->errors(),
@@ -541,7 +545,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-    	$returnValue = [];
+        $returnValue = [];
         $token = $request->header('Authorization');
 
         try {
