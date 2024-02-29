@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Mail\VerifyMail;
 use App\Mail\ChangePassword;
+use App\Mail\ResetPassword;
 
 use App\Models\User;
 use App\Models\Profile;
@@ -32,6 +33,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 use Exception;
 use ErrorException;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Exp;
 
 class AuthController extends Controller
 {
@@ -496,6 +499,158 @@ class AuthController extends Controller
         }
 
         return response()->json($returnValue, $code);
+    }
+
+    /**
+     * @OA\Post(
+     *    path="/password/request/reset",
+     *    operationId="requestResetPassword",
+     *    tags={"Authentications"},
+     *    description="Sent link to reset user password",
+     *    @OA\RequestBody(
+     *        required=true,
+     *        @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                @OA\Property(property="email", type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *    @OA\Response(
+     *        response=200,
+     *        description="Success",
+     *    )
+     * )
+     */
+    public function requestResetPassword(Request $request)
+    {
+        $returnValue = [];
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
+                'datetime' => now(),
+                'url' => $this->endpoint()
+            ];
+
+            return response()->json($returnValue, 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                throw new Exception('Email yang Anda input belum terdaftar');
+            }
+
+            $data = [
+                'id' => $user->id,
+                'exp' => date('Y-m-d H:i:s', strtotime('+1 hour'))
+            ];
+
+            $encrypted = encrypt($data);
+
+            $response = new \stdClass;
+            $response->token = $encrypted;
+
+            // send email
+            $dataEmail = [
+                'user_id' => $user->id,
+                'url' => route('get.reset.password', $encrypted),
+            ];
+
+            // send mail verifikasi user
+            $mail = new ResetPassword($dataEmail);
+            Mail::to($user->email)->send($mail);
+
+            $code = 200;
+            $returnValue = [
+                'success' => true,
+                'data' => $response,
+                'datetime' => now(),
+                'url' => $this->endpoint()
+            ];
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+
+        return response()->json($returnValue, $code);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $returnValue = [];
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|confirmed',
+            'encrypted' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            $returnValue = [
+                'success' => false,
+                'message' => $validator->errors(),
+                'datetime' => now(),
+                'url' => $this->endpoint()
+            ];
+
+            return redirect()->back()->with('error', $validator->errors());
+
+            // return response()->json($returnValue, 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $now = date('Y-m-d H:i:s');
+            $decrypt = decrypt($request->encrypted);
+
+            if ($now > $decrypt['exp']) {
+                throw new Exception("The reset password link has expired, please create a new password change request ", 401);
+            }
+
+            $user = User::find($decrypt['id']);
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            $code = 200;
+            $returnValue = [
+                'success' => true,
+                'data' => 'Your password has been reset',
+                'datetime' => now(),
+                'url' => $this->endpoint()
+            ];
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (QueryException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        } catch (ErrorException $ex) {
+            DB::rollback();
+            return $this->error($ex);
+        }
+
+        // return response()->json($returnValue, $code);
+        return redirect()->back()->with('success', 'Berhasil mereset kata sandi');
     }
 
     /**

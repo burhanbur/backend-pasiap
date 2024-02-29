@@ -32,6 +32,8 @@ Route::post('login', [AuthController::class, 'login'])->middleware('throttle.log
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('refresh', [AuthController::class, 'refreshToken'])->name('refresh');
 
+Route::post('password/request/reset', [AuthController::class, 'requestResetPassword']);
+
 Route::get('apps', [HomeController::class, 'app']);
 
 // faq
@@ -54,7 +56,7 @@ Route::group(['prefix' => 'articles'], function () {
     Route::get('/{slug}', [ArticleController::class, 'show']);
 });
 
-Route::group([ 
+Route::group([
     'middleware' => [
         'auth.jwt',
         'verified'
