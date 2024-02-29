@@ -11,7 +11,11 @@ trait Response
 		$returnValue = 'Something went wrong';
 
 		if ($ex) {
-			$returnValue = $ex->getMessage() . ' in file ' . $ex->getFile() . ' at line ' . $ex->getLine();
+			if (env('APP_ENV') == 'local') {
+				$returnValue = $ex->getMessage() . ' in file ' . $ex->getFile() . ' at line ' . $ex->getLine();
+			}
+
+			$returnValue = $ex->getMessage();
 		}
 
 		return $returnValue;
