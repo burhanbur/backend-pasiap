@@ -494,6 +494,7 @@ class ReportController extends Controller
 				'reporter_id' => $report->reported_by,
 				'reporter_name' => $report->getReportedBy->name,
 				'reporter_role_id' => @$user->roles()->first()->id,
+				'reporter_role_name' => @$user->roles()->first()->name,
 				'handler_id' => $report->taken_by,
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
@@ -672,6 +673,7 @@ class ReportController extends Controller
 				'reporter_id' => $report->reported_by,
 				'reporter_name' => $report->getReportedBy->name,
 				'reporter_role_id' => @$user->roles()->first()->id,
+				'reporter_role_name' => @$user->roles()->first()->name,
 				'handler_id' => $report->taken_by,
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
@@ -781,7 +783,7 @@ class ReportController extends Controller
 
 			// send push notification
 			$service = new FirebaseService;
-			$service->sendNotificationReportStatus($report->status);
+			$service->sendNotificationReportStatus($report->reported_by, $report->status);
 
 			$data = [
 				'id' => $report->id,
@@ -791,6 +793,7 @@ class ReportController extends Controller
 				'reporter_id' => $report->reported_by,
 				'reporter_name' => $report->getReportedBy->name,
 				'reporter_role_id' => @$user->roles()->first()->id,
+				'reporter_role_name' => @$user->roles()->first()->name,
 				'handler_id' => $report->taken_by,
 				'handler_name' => @$report->getTakenBy->name,
 				'lat' => $report->lat,
