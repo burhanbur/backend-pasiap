@@ -65,13 +65,13 @@ class FirebaseService
 			$data = [
 				"registration_ids" => $tokens,
 				"notification" => [
-					"android" => [
-						'user_id' => @$user->id,
-						'role_id' => @$user->roles()->first()->id,
-						'role_name' => @$user->roles()->first()->name,
-					],
 					"title" => 'Pemberitahuan ' . @$category->name,
 					"body" => 'Ada laporan ' . @$category->name . ' di dekat lokasi Anda dengan kode ' . $code . '. Segera lakukan tindakan pencegahan!',
+				],
+				"data" => [
+					'user_id' => @$user->id,
+					'role_id' => @$user->roles()->first()->id,
+					'role_name' => @$user->roles()->first()->name,
 				]
 			];
 
@@ -168,13 +168,13 @@ class FirebaseService
 			$data = [
 				"registration_ids" => $tokens,
 				"notification" => [
-					"android" => [
-						'user_id' => @$user->id,
-						'role_id' => @$user->roles()->first()->id,
-						'role_name' => @$user->roles()->first()->name,
-					],
 					"title" => 'Status Penanganan Laporan',
 					"body" => $message,
+				],
+				"data" => [
+					'user_id' => @$user->id,
+					'role_id' => @$user->roles()->first()->id,
+					'role_name' => @$user->roles()->first()->name,
 				]
 			];
 
